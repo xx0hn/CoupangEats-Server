@@ -3,7 +3,7 @@ module.exports = function(app){
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 0. 테스트 API
-    // app.get('/app/test', user.getTest)
+    app.get('/app/test', user.getTest)
 
     // 1. 유저 생성 (회원가입) API
     app.post('/app/users', user.postUsers);
@@ -15,6 +15,8 @@ module.exports = function(app){
     app.get('/app/users/:userId', user.getUserById);
 
 
+
+
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);
@@ -23,7 +25,13 @@ module.exports = function(app){
     app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers)
 
 
+    //#test 유저 목록 조회 API
+    app.get('/app/users1', user.getUsers1);
 
+    //#2 즐겨찾기 목록 조회 API
+    // app.get('/app/users/favorites', jwtMiddleware, user.getFavorite);
+    //#3 회원가입 API
+    app.post('/app/signUp', user.signUp);
 };
 
 
@@ -32,3 +40,4 @@ module.exports = function(app){
 // app.get('/app/auto-login', jwtMiddleware, user.check);
 
 // TODO: 탈퇴하기 API
+

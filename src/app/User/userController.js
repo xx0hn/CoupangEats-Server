@@ -4,6 +4,7 @@ const userService = require("../../app/User/userService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse} = require("../../../config/response");
 
+
 const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
 
@@ -12,9 +13,44 @@ const {emit} = require("nodemon");
  * API Name : 테스트 API
  * [GET] /app/test
  */
-// exports.getTest = async function (req, res) {
-//     return res.send(response(baseResponse.SUCCESS))
-// }
+exports.getTest = async function (req, res) {
+    return res.send(response(baseResponse.SUCCESS))
+}
+
+exports.signUp = async function (req, res) {
+    const {email, password, name, phoneNum} = req.info;
+    //이메일 확인
+    if(!email)
+        return res.send(response(baseResponse.SIGNIN_EMAIL_EMPTY));
+    if(email.length > 45)
+        return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
+    if(!regexEmail.test(email))
+        return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
+    //비밀번호 확인
+    if(!password)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
+    if(password.length < 6)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
+    //이름 확인
+    if(!name)
+        return res.send(response(baseResponse.SIGNUP_NAME_EMPTY));
+    if(name.length > 15)
+        return res.send(response(baseResponse.SIGNUP_NAME_LENGTH));
+    //전화번호 확인
+    if(!phoneNum)
+        return res.send(response(baseResponse.SIGNUP_PHONENUM_EMPTY));
+    if(phoneNum.length > 15)
+        return res.send(response(baseResponse.SIGNUP_PHONENUM_LENGTH));
+
+    const signUpRes = await userService.makeUser(
+        email,
+        password,
+        name,
+        phoneNum
+    );
+    return res.send(signUpRes);
+
+}
 
 /**
  * API No. 1
@@ -94,6 +130,7 @@ exports.getUserById = async function (req, res) {
 };
 
 
+
 // TODO: After 로그인 인증 방법 (JWT)
 /**
  * API No. 4
@@ -139,16 +176,6 @@ exports.patchUsers = async function (req, res) {
     }
 };
 
-
-
-
-
-
-
-
-
-
-
 /** JWT 토큰 검증 API
  * [GET] /app/auto-login
  */
@@ -157,3 +184,27 @@ exports.check = async function (req, res) {
     console.log(userIdResult);
     return res.send(response(baseResponse.TOKEN_VERIFICATION_SUCCESS));
 };
+
+
+/**
+ * API No.test
+ * API Name : 유저 조회 API ()
+ * [GET] /app/users
+ */
+exports.getUsers1 = async function (req, res) {
+    const userResult = await userProvider.retrieveUsers();
+    return res.send(response(baseResponse.SUCCESS, userResult));
+}
+
+
+/**
+ * API No. 2
+ * API Name : 유저 조회 API (+ 이메일로 검색 조회)
+ * [GET] /app/users/favorites
+ */
+// exports.getFavorites = async function (req, res)  {
+//     const userIdFromJWT = req.verifiedToken.userId;
+//     if(!userIdFromJWT) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+//     const favoritesByUserId = await userProvider.getFavorites(userIdFromJWT);
+//     return res.send(response(baseResponse.SUCCESS, favoritesByUserId));
+// }

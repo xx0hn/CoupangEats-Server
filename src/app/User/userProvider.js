@@ -56,3 +56,18 @@ exports.accountCheck = async function (email) {
 
   return userAccountResult;
 };
+
+exports.retrieveUsers = async function () {
+  const connection = await pool.getConnection(async ( conn) => conn);
+  const userResult1 = await userDao.selectUser1(connection);
+  connection.release();
+
+  return userResult1;
+}
+
+// exports.getFavorites = async function (userIdFromJWT) {
+//   const connection = await pool.getConnection(async(conn) => conn);
+//   const favoritesResult = await userDao.selectUserFavorites(connection, userIdFromJWT);
+//   connection.release();
+//   return favoritesResult;
+// };
