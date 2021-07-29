@@ -23,7 +23,7 @@ exports.getAddress = async function(req, res) {
 /**
  * API No. 5
  * API Name : 유저 배달지 삭제 API
- * [PATCH] /app/users/address
+ * [PATCH] /app/users/address/edit
  */
 exports.removeAddress = async function(req, res) {
     const {userId, addressId} = req.body;
@@ -33,4 +33,20 @@ exports.removeAddress = async function(req, res) {
 
     const removeAddressId = await addressService.rmAddress(userId, addressId);
     return res.send(response(baseResponse.SUCCESS, removeAddressId));
+}
+
+/**
+ * API No. 6
+ * API Name : 유저 배달지 추가 API
+ * [POST] /app/users/address/add
+ */
+exports.addAddress = async function(req, res) {
+    const {userId, roadAddress, detailAddress} = req.body;
+
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!roadAddress) return res.send(response(baseResponse.ROAD_ADDRESS_EMPTY));
+    if(!detailAddress) return res.send(response(baseResponse.DETAIL_ADDRESS_EMPTY));
+
+    const addAddressInfo = await addressService.additAddress(userId, roadAddress, detailAddress);
+    return res.send(response(addAddressInfo));
 }

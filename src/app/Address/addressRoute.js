@@ -8,4 +8,7 @@ module.exports = function(app) {
 
     //#5 배송지 삭제 API
     app.patch('/app/users/address/edit', address.removeAddress);
+
+    //#6 배송지 추가 API
+    app.post('/app/users/address/add', address.addAddress);
 }

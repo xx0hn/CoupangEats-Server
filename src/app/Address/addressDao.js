@@ -21,7 +21,16 @@ async function rmAddressInfo(connection, userId, addressId){
     return existAddressRows;
 }
 
+//유저의 배송지 추가
+async function additAddressInfo(connection, userId, roadAddress, detailAddress){
+    const additAddressInfoResultQuery=`
+    insert into UserAddress(userId, roadAddress, detailAddress)
+values (?, ?, ?);`;
+    const [addAddressRows] = await connection.query(additAddressInfoResultQuery, [userId, roadAddress, detailAddress]);
+    return addAddressRows;
+}
 module.exports = {
     selectAddress,
-    rmAddressInfo
+    rmAddressInfo,
+    additAddressInfo
 };

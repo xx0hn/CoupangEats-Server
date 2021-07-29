@@ -24,3 +24,16 @@ exports.rmAddress = async function(userId, addressId){
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.additAddress = async function(userId, roadAddress, detailAddress){
+   try {
+       const connection = await pool.getConnection((async (conn) => conn));
+       const additAddressResult = await addressDao.additAddressInfo(connection, userId, roadAddress, detailAddress);
+       connection.release();
+
+       return response(baseResponse.SUCCESS);
+   } catch(err) {
+       logger.error(`App - addAddress Service error\n: ${err.message}`);
+       return errResponse(baseResponse.DB_ERROR);
+   }
+}

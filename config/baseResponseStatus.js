@@ -39,6 +39,9 @@ module.exports = {
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
 
     ADDRESS_ID_EMPTY : { "isSuccess": false, "code": 2025, "message": "addressId를 입력해주세요. "},
+    ROAD_ADDRESS_EMPTY : { "isSuccess": false, "code": 2026, "message": "roadAddress를 입력해주세요. "},
+    DETAIL_ADDRESS_EMPTY : { "isSuccess": false, "code": 2027, "message": "detailAddress를 입력해주세요. "},
+
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
