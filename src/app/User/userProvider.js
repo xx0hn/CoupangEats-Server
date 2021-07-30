@@ -65,6 +65,13 @@ exports.retrieveUsers = async function () {
   return userResult1;
 }
 
+exports.getFavoritesList = async function(userId) {
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const favoritesResult = await userDao.selectFavoritesList(connection, userId);
+  connection.release();
+  return favoritesResult;
+}
+
 // exports.getFavorites = async function (userIdFromJWT) {
 //   const connection = await pool.getConnection(async(conn) => conn);
 //   const favoritesResult = await userDao.selectUserFavorites(connection, userIdFromJWT);

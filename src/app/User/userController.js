@@ -176,6 +176,9 @@ exports.patchUsers = async function (req, res) {
     }
 };
 
+
+
+
 /** JWT 토큰 검증 API
  * [GET] /app/auto-login
  */
@@ -197,14 +200,43 @@ exports.getUsers1 = async function (req, res) {
 }
 
 
+
+
+
 /**
- * API No. 2
- * API Name : 유저 조회 API (+ 이메일로 검색 조회)
- * [GET] /app/users/favorites
+ * API No. 8
+ * API Name : 즐겨찾기 조회 API
+ * [GET] /app/users/{userId}/favorites
  */
-// exports.getFavorites = async function (req, res)  {
-//     const userIdFromJWT = req.verifiedToken.userId;
-//     if(!userIdFromJWT) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-//     const favoritesByUserId = await userProvider.getFavorites(userIdFromJWT);
-//     return res.send(response(baseResponse.SUCCESS, favoritesByUserId));
-// }
+exports.getFavorite = async function(req, res){
+    const userId = req.params.userId;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    const getFavoritesByUserId = await userProvider.getFavoritesList(userId);
+    return res.send(response(baseResponse.SUCCESS, getFavoritesByUserId));
+}
+/**
+ * API No. 9
+ * API Name : 즐겨찾기 항목 삭제 API
+ * [PATCH] /app/users/favorites/edit
+ */
+exports.removeFavorite = async function(req, res) {
+    const {userId, favoritesId} = req.body;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!favoritesId) return res.send(response(baseResponse.FAVORITES_ID_EMPTY));
+
+    const rmFavorites = await userService.rmFavoritesList(userId, favoritesId);
+    return res.send(response(rmFavorites));
+}
+/**
+ * API No. 10
+ * API Name : 즐겨찾기 항목 삭제 API
+ * [POST] /app/users/favorites/edit
+ */
+exports.addFavorite = async function(req, res){
+    const {userId, restaurantId} = req.body;
+    if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(!restaurantId) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
+
+    const addFavoriteRestaurant = await userService.addFavoriteList(userId, restaurantId);
+    return res.send(response(addFavoriteRestaurant));
+}

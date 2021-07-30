@@ -42,6 +42,10 @@ module.exports = {
     ROAD_ADDRESS_EMPTY : { "isSuccess": false, "code": 2026, "message": "roadAddress를 입력해주세요. "},
     DETAIL_ADDRESS_EMPTY : { "isSuccess": false, "code": 2027, "message": "detailAddress를 입력해주세요. "},
 
+    FAVORITES_ID_EMPTY : { "isSuccess": false, "code": 2028, "message": "favoritesId를 입력해주세요. "},
+
+    RESTAURANT_ID_EMPTY : {"isSuccess": false, "code": 2029, "message": "restaurantId를 입력해주세요. "},
+
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

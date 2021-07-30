@@ -139,3 +139,28 @@ exports.editUser = async function (id, nickname) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.rmFavoritesList = async function (userId, favoritesId){
+    try{
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const editFavoritesList = await userDao.updateFavoritesList(connection, userId, favoritesId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - editFavorites Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.addFavoriteList = async function (userId, restaurantId) {
+    try{
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const addFavoriteResList = await userDao.additFavoriteList(connection, userId, restaurantId);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - addFavorites Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

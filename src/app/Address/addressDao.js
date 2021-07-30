@@ -29,8 +29,19 @@ values (?, ?, ?);`;
     const [addAddressRows] = await connection.query(additAddressInfoResultQuery, [userId, roadAddress, detailAddress]);
     return addAddressRows;
 }
+
+//유저의 배송지 설정
+async function defaultAddressInfo(connection, userId, addressId){
+    const defaultAddressResultQuery=`
+    update UserAddress
+set status = 1
+where id = ?;`
+    const [defaultAddressRows] = await connection.query(defaultAddressResultQuery, [userId, addressId]);
+    return defaultAddressRows;
+}
 module.exports = {
     selectAddress,
     rmAddressInfo,
-    additAddressInfo
+    additAddressInfo,
+    defaultAddressInfo
 };

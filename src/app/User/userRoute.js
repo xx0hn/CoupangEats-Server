@@ -16,7 +16,6 @@ module.exports = function(app){
 
 
 
-
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);
@@ -28,10 +27,20 @@ module.exports = function(app){
     //#test 유저 목록 조회 API
     app.get('/app/users1', user.getUsers1);
 
-    //#2 즐겨찾기 목록 조회 API
-    // app.get('/app/users/favorites', jwtMiddleware, user.getFavorite);
-    //#3 회원가입 API
-    app.post('/app/signUp', user.signUp);
+
+
+
+
+
+    //#8 즐겨찾기 조회 API
+    app.get('/app/users/:userId/favorites', user.getFavorite);
+
+    //#9 즐겨찾기 항목 삭제 API
+    app.patch('/app/users/favorites/edit', user.removeFavorite);
+
+    //#10 즐겨찾기 항목 추가 API
+    app.post('/app/users/favorites/add', user.addFavorite);
+
 };
 
 

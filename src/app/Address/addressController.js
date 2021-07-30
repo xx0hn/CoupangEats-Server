@@ -50,3 +50,18 @@ exports.addAddress = async function(req, res) {
     const addAddressInfo = await addressService.additAddress(userId, roadAddress, detailAddress);
     return res.send(response(addAddressInfo));
 }
+
+/**
+ * API No. 7
+ * API Name : 유저 배달지 설정 API
+ * [POST] /app/users/address/default
+ */
+exports.defaultAddress = async function(req, res) {
+    const {userId, addressId} = req.body;
+
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!addressId) return res.send(response(baseResponse.ADDRESS_ID_EMPTY));
+
+    const defaultAddressInfo = await addressService.setDefaultAddress(userId, addressId);
+    return res.send(response(defaultAddressInfo));
+}

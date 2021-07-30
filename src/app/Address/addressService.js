@@ -27,7 +27,7 @@ exports.rmAddress = async function(userId, addressId){
 
 exports.additAddress = async function(userId, roadAddress, detailAddress){
    try {
-       const connection = await pool.getConnection((async (conn) => conn));
+       const connection = await pool.getConnection(async (conn) => conn);
        const additAddressResult = await addressDao.additAddressInfo(connection, userId, roadAddress, detailAddress);
        connection.release();
 
@@ -36,4 +36,17 @@ exports.additAddress = async function(userId, roadAddress, detailAddress){
        logger.error(`App - addAddress Service error\n: ${err.message}`);
        return errResponse(baseResponse.DB_ERROR);
    }
+}
+
+exports.setDefaultAddress = async function(userId, addressId) {
+    try {
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const defaultAddressResult = await addressDao.defaultAddressInfo(connection, userId, addressId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - defaultAddress Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
 }

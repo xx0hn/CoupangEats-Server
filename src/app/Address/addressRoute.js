@@ -11,4 +11,7 @@ module.exports = function(app) {
 
     //#6 배송지 추가 API
     app.post('/app/users/address/add', address.addAddress);
+
+    //#7 기본 배송지 선택 API
+    app.patch('/app/users/address/default', address.defaultAddress);
 }

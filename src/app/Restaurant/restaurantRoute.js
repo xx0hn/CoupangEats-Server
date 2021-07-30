@@ -10,4 +10,5 @@ module.exports = function(app) {
 
     //#4 평점 순 매장 조회 API
     app.get('/app/restaurant/sort/review', restaurant.sortReviewRestaurant);
+
 };

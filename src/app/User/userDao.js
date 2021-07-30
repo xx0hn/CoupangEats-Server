@@ -87,67 +87,93 @@ async function selectUser1(connection) {
   return userRows1;
 }
 
-// async function selectUserFavorites(connection, userIdFromJWT) {
-//   const query=`
-//         select  a.userId
-//                 , a.restaurantId as 식당id
-//                 , b.name as 식당명
-//                 , concat(h.imageUrl) as 식당사진
-//                 , case when cheetaDel = 1 then '치타배달' else '일반배달' end as 배달유형
-//                 , round(sum(f.score) / count(e.id), 1) as 별점
-//                 , chargeCount as 리뷰수
-//                 , (6371*acos(cos(radians(g.latitude))*cos(radians(c.latitude))*cos(radians(c.longtitude)-radians(g.longtitude))+sin(radians(g.latitude))*sin(radians(c.latitude)))) AS 거리
-//                 , b.delTime as 최소배달시간
-//                 , b.maxDelTime as 최대배달시간
-//                 , b.delCost as 배달비
-// from Favorites a
-// left join ( select id
-//                     , name
-//                     , cheetaDel
-//                     , delTime
-//                     , maxDelTime
-//                     , delCost
-//                 from Restaurant ) as b
-//                 on a.restaurantId = b.id
-// left join ( select restaurantId
-//                     , longtitude
-//                     , latitude
-//                 from RestaurantAddress ) as c
-//                 on a.restaurantid = c.restaurantId
-// left join ( select id
-//                     , userId
-//                     , restaurantId
-//                     , chargeId
-//                 from Orders
-//                  group by userId) as d
-//                  on a.restaurantId = d.restaurantId
-// left join ( select id
-//                     , restaurantId
-//                     , count(id) as 'chargeCount'
-//                 from Charge
-//                 group by id ) as e
-//                 on e.id = d.chargeId
-// left join (  select id
-//                     , chargeId
-//                         , userId
-//                         , score
-//                 from Review
-//                 group by chargeId, userId) as f
-//                 on e.id = f.chargeId
-// left join ( select userId
-//                     , longtitude
-//                     , latitude
-//                 from UserAddress ) as g
-//                  on a.userId = g.userId
-// left join ( select restaurantId
-//                     , imageUrl
-//                 from RestaurantImageUrl
-//                 group by restaurantId ) as h
-//                 on a.restaurantId = h.restaurantId
-// where a.userId = ?;`;
-//   const [favoritesRows] = await connection.query(query);
-//   return favoritesRows;
-// }
+//유저 즐겨찾기 목록 조회
+async function selectFavoritesList(connection, userId) {
+  const selectUsersFavoritesResultQuery = `
+  select  a.userId 
+        , a.restaurantId as RestaurantId
+        , b.name as RestaurantName
+        , concat(h.imageUrl) as RestaurantImage
+        , case when cheetaDel = 1 then '치타배달' else '일반배달' end as DeliveryType
+        , starGrade as StarGrade
+        , reviewCount as ReviewCount
+        , round((6371*acos(cos(radians(g.latitude))*cos(radians(c.latitude))*cos(radians(c.longtitude)-radians(g.longtitude))+sin(radians(g.latitude))*sin(radians(c.latitude)))),1) AS Distance
+        , b.delTime as DeliveryTIme
+        , b.maxDelTime as MaxDeliveryTime
+        , b.delCost as DeliveryCost
+        , orderCount as OrderCount
+from Favorites a
+left join ( select id
+                    , name
+                    , cheetaDel
+                    , delTime
+                    , maxDelTime
+                    , delCost
+                from Restaurant ) as b
+                on a.restaurantId = b.id
+left join ( select restaurantId
+                    , longtitude
+                    , latitude
+                from RestaurantAddress ) as c
+                on a.restaurantid = c.restaurantId
+left join ( select id
+                    , userId
+                    , restaurantId
+                    , chargeId
+                    , round(count(userId)/count(chargeId),0) as 'orderCount'
+                from Orders 
+                group by userId) as d
+                on a.restaurantId = d.restaurantId
+left join ( select id
+                    , restaurantId
+                from Charge 
+                group by id ) as e
+                on e.id = d.chargeId
+left join (  select id
+                    , chargeId
+                    , userId
+                    , score
+                    , round(sum(score)/count(restaurantId), 1) as 'starGrade'
+                    , count(restaurantId) as 'reviewCount'
+                from Review 
+                group by chargeId, userId) as f
+                on e.id = f.chargeId
+left join ( select userId
+                    , longtitude
+                    , latitude
+                from UserAddress ) as g
+                on a.userId = g.userId
+left join ( select restaurantId
+                    , imageUrl
+                from RestaurantImageUrl
+                group by restaurantId ) as h
+                on a.restaurantId = h.restaurantId
+where a.userId= ?
+group by a.restaurantId
+order by orderCount desc;`;
+  const [userFavoritesRows] = await connection.query(selectUsersFavoritesResultQuery, userId);
+  return userFavoritesRows;
+}
+
+//즐겨찾기 항목 삭제
+async function updateFavoritesList(connection, userId, favoritesId){
+  const updateFavoritesListQuery =`
+  update Favorites
+set status = 2
+where userId = ? and id = ?;`;
+  const [existFavoritesRows] = await connection.query(updateFavoritesListQuery, [userId, favoritesId]);
+  return existFavoritesRows;
+}
+
+//즐겨찾기 항목 추가
+async function additFavoriteList(connection, userId, restaurantId){
+  const additFavoriteListQuery =`
+  insert into Favorites(userId, restaurantId)
+values (?, ?);`;
+  const [addFavoritesRows] = await connection.query(additFavoriteListQuery, [userId, restaurantId]);
+  return addFavoritesRows;
+}
+
 
 module.exports = {
   selectUser,
@@ -158,5 +184,7 @@ module.exports = {
   selectUserAccount,
   updateUserInfo,
   selectUser1,
-  // selectUserFavorites,
+  selectFavoritesList,
+  updateFavoritesList,
+  additFavoriteList,
 };
