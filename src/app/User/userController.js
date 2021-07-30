@@ -240,3 +240,16 @@ exports.addFavorite = async function(req, res){
     const addFavoriteRestaurant = await userService.addFavoriteList(userId, restaurantId);
     return res.send(response(addFavoriteRestaurant));
 }
+
+/**
+ * API No. 11
+ * API Name : 과거 주문내역 조회API
+ * [GET] /app/users/{userId}/pastorder
+ */
+exports.getPastOrders = async function(req, res){
+    const userId = req.params.userId;
+    if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+
+    const pastOrders = await userProvider.pastOrderList(userId);
+    return res.send(response(baseResponse.SUCCESS, pastOrders));
+}

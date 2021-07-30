@@ -72,9 +72,9 @@ exports.getFavoritesList = async function(userId) {
   return favoritesResult;
 }
 
-// exports.getFavorites = async function (userIdFromJWT) {
-//   const connection = await pool.getConnection(async(conn) => conn);
-//   const favoritesResult = await userDao.selectUserFavorites(connection, userIdFromJWT);
-//   connection.release();
-//   return favoritesResult;
-// };
+exports.pastOrderList = async function (userId) {
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const pastOrderResult = await userDao.selectPastOrder(connection, userId);
+  connection.release();
+  return pastOrderResult;
+}

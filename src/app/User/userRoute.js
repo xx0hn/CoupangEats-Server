@@ -41,6 +41,9 @@ module.exports = function(app){
     //#10 즐겨찾기 항목 추가 API
     app.post('/app/users/favorites/add', user.addFavorite);
 
+    //#11 과거 주문내역 조회 API
+    app.get('/app/users/:userId/pastorder', user.getPastOrders);
+
 };
 
 

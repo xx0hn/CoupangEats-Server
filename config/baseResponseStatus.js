@@ -46,6 +46,15 @@ module.exports = {
 
     RESTAURANT_ID_EMPTY : {"isSuccess": false, "code": 2029, "message": "restaurantId를 입력해주세요. "},
 
+    CATEGORY_ID_EMPTY : {"isSuccess" : false, "code" : 2030, "message": "categoryId를 입력해주세요. "},
+
+    REVIEW_ID_EMPTY : {"isSuccess" : false, "code": 2031, "message": "reviewId를 입력해주세요. "},
+    REVIEW_SCORE_EMPTY: {"isSuccess" : false, "code" : 2032, "message": "reviewScore를 입력해주세요. "},
+    REVIEW_SCORE_SIZE : {"isSuccess" : false, "code" : 2033, "message": "reviewScore는 1~5입니다. "},
+    REVIEW_CONTENTS_EMPTY : {"isSuccess": false, "code" : 2034, "message": "contents를 입력해주세요. "},
+
+    CHARGE_ID_EMPTY : {"isSuccess" : false, "code" : 2035, "message": "chargeId를 입력해주세요. "},
+
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

@@ -23,3 +23,10 @@ exports.reviewRestaurant = async function(){
     connection.release();
     return reviewRestaurantResult;
 }
+
+exports.restaurantByCategoryId = async function(categoryId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const restaurantByCategoryResult = await restaurantDao.selectRestaurantByCategoryId(connection, categoryId);
+    connection.release();
+    return restaurantByCategoryResult;
+}

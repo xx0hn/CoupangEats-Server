@@ -174,6 +174,74 @@ values (?, ?);`;
   return addFavoritesRows;
 }
 
+//과거 주문내역 조회
+async function selectPastOrder(connection, userId) {
+  const selectPastOrderQuery =`
+  select b.id as RestaurantId
+        , b.name as RestaurantName
+        , concat(i.imageUrl) as RestaurantImage
+        , date_format(a.createdAt, "%y-%m-%d") as OrderDate
+        , case when date_format(a.createdAt, "%H") > 12 then '오후' else '오전' end as Noon
+        , case when date_format(a.createdAt, "%H") > 12 then +date_format(a.createdAt, "%h:%i") else +date_format(a.createdAt, "%h:%i") end as 'Time'
+        , case when a.status = 0 then '배달완료' else '배달취소' end as 'Status'
+        , concat(f.name) as MenuName
+        , concat(c.menuCount) as MenuCount
+        , case when a.couponId is not null then c.menuCount*f.cost+b.delCost-g.benefits else c.menuCount*f.cost+b.delCost end as TotalCost
+        , case when (6371*acos(cos(radians(e.latitude))*cos(radians(h.latitude))*cos(radians(h.longtitude)-radians(e.longtitude))+sin(radians(e.latitude))*sin(radians(h.latitude)))) > 350 then '주문불가' else '주문가능' end as Available
+from Charge a
+left join ( select id
+                    , name
+                    , delCost
+                from Restaurant ) as b
+                on a.restaurantId = b.id
+left join ( select id
+                    , userId
+                    , restaurantId
+                    ,chargeId
+                    , menuId
+                    , menuCount
+                from Orders ) as c
+                on a.id = c.chargeId
+left join ( select id
+                    , restaurantId
+                    , imageUrl
+                from RestaurantImageUrl ) as d
+                on a.restaurantId = d.restaurantId
+left join ( select id
+                    , userId
+                    , latitude
+                    , longtitude
+                    , status
+                from UserAddress ) as e
+                on c.userId = e.userId
+left join ( select id
+                    , name
+                    , cost
+                from Menu ) as f
+                 on c.menuId = f.id
+left join ( select id
+                    , userId
+                    , benefits
+                    , status
+                from Coupon ) as g
+                on a.couponId = g.id
+left join ( select id
+                    , restaurantId
+                    , latitude
+                    , longtitude
+                from RestaurantAddress ) as h
+                on a.restaurantId = h.restaurantId
+left join ( select id
+                    , restaurantId
+                    , imageUrl
+                from RestaurantImageUrl) as i
+                on b.id = i.restaurantId
+where c.userId = ?
+group by c.id;`;
+  const [pastOrderRows] = await connection.query(selectPastOrderQuery, userId);
+  return pastOrderRows;
+}
+
 
 module.exports = {
   selectUser,
@@ -187,4 +255,5 @@ module.exports = {
   selectFavoritesList,
   updateFavoritesList,
   additFavoriteList,
+  selectPastOrder,
 };
