@@ -19,4 +19,13 @@ module.exports = function(app) {
 
     //#14 매장 리뷰 생성 API
     app.post('/app/restaurant/review', restaurant.addReview);
+
+    //#15 매장 리뷰 수정 API
+    app.patch('/app/restaurant/review', restaurant.editReview);
+
+    //#16 사진 있는 매장 리뷰 상세 조회 API
+    app.get('/app/restaurant/:restaurantId/photoReview', restaurant.getReview);
+
+    //#19 매장 메인 화면 조회 API
+    app.get('/app/restaurant/:restaurantId/main', restaurant.restaurantMain);
 };

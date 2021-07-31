@@ -1,8 +1,8 @@
 // 모든 유저 조회
 async function selectUser(connection) {
   const selectUserListQuery = `
-                SELECT email, nickname 
-                FROM UserInfo;
+                SELECT email, name 
+                FROM User;
                 `;
   const [userRows] = await connection.query(selectUserListQuery);
   return userRows;
@@ -11,19 +11,28 @@ async function selectUser(connection) {
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
   const selectUserEmailQuery = `
-                SELECT email, nickname 
-                FROM UserInfo 
+                SELECT email, name 
+                FROM User
                 WHERE email = ?;
                 `;
   const [emailRows] = await connection.query(selectUserEmailQuery, email);
   return emailRows;
 }
 
+async function selectUserPhoneNum(connection, phoneNum){
+  const selectUserPhoneNumQuery =`
+                SELECT phoneNum, name 
+                FROM User
+                WHERE phoneNum = ?;`;
+  const [phoneNumRows] = await connection.query(selectUserPhoneNumQuery, phoneNum);
+  return phoneNumRows;
+}
+
 // userId 회원 조회
 async function selectUserId(connection, userId) {
   const selectUserIdQuery = `
-                 SELECT id, email, nickname 
-                 FROM UserInfo 
+                 SELECT id, email, name 
+                 FROM User
                  WHERE id = ?;
                  `;
   const [userRow] = await connection.query(selectUserIdQuery, userId);
@@ -33,23 +42,25 @@ async function selectUserId(connection, userId) {
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
   const insertUserInfoQuery = `
-        INSERT INTO UserInfo(email, password, nickname)
-        VALUES (?, ?, ?);
+    insert into User(email, password, name, phoneNum, sex)
+    values (?, ?, ?, ?, ?);
     `;
   const insertUserInfoRow = await connection.query(
     insertUserInfoQuery,
     insertUserInfoParams
   );
-
   return insertUserInfoRow;
 }
 
 // 패스워드 체크
 async function selectUserPassword(connection, selectUserPasswordParams) {
   const selectUserPasswordQuery = `
-        SELECT email, nickname, password
-        FROM UserInfo 
-        WHERE email = ? AND password = ?;`;
+    select email
+         , name
+         , password
+    from User
+    where email = ?
+      and password = ?;`;
   const selectUserPasswordRow = await connection.query(
       selectUserPasswordQuery,
       selectUserPasswordParams
@@ -62,7 +73,7 @@ async function selectUserPassword(connection, selectUserPasswordParams) {
 async function selectUserAccount(connection, email) {
   const selectUserAccountQuery = `
         SELECT status, id
-        FROM UserInfo 
+        FROM User 
         WHERE email = ?;`;
   const selectUserAccountRow = await connection.query(
       selectUserAccountQuery,
@@ -73,8 +84,8 @@ async function selectUserAccount(connection, email) {
 
 async function updateUserInfo(connection, id, nickname) {
   const updateUserQuery = `
-  UPDATE UserInfo 
-  SET nickname = ?
+  UPDATE User 
+  SET name = ?
   WHERE id = ?;`;
   const updateUserRow = await connection.query(updateUserQuery, [nickname, id]);
   return updateUserRow[0];
@@ -161,7 +172,7 @@ async function updateFavoritesList(connection, userId, favoritesId){
   update Favorites
 set status = 2
 where userId = ? and id = ?;`;
-  const [existFavoritesRows] = await connection.query(updateFavoritesListQuery, [userId, favoritesId]);
+  const [existFavoritesRows] = await connection.query(updateFavoritesListQuery, userId, [favoritesId]);
   return existFavoritesRows;
 }
 
@@ -174,86 +185,133 @@ values (?, ?);`;
   return addFavoritesRows;
 }
 
-//과거 주문내역 조회
-async function selectPastOrder(connection, userId) {
-  const selectPastOrderQuery =`
-  select b.id as RestaurantId
-        , b.name as RestaurantName
-        , concat(i.imageUrl) as RestaurantImage
-        , date_format(a.createdAt, "%y-%m-%d") as OrderDate
-        , case when date_format(a.createdAt, "%H") > 12 then '오후' else '오전' end as Noon
-        , case when date_format(a.createdAt, "%H") > 12 then +date_format(a.createdAt, "%h:%i") else +date_format(a.createdAt, "%h:%i") end as 'Time'
+
+// 과거 주문 내역 조회(상품 제외 조회)
+async function getOrdersInfo(connection, userId) {
+  const query = `
+    select a.id
+         , b.id as RestaurantId
+         , b.name as RestaurantName
+         , concat(i.imageUrl) as RestaurantImage
+         , date_format(a.createdAt, "%y-%m-%d") as OrderDate
+         , case when date_format(a.createdAt, "%H") > 12 then '오후' else '오전' end as Noon
+         , case when date_format(a.createdAt, "%H") > 12 then +date_format(a.createdAt, "%h:%i") else +date_format(a.createdAt, "%h:%i") end as 'Time'
         , case when a.status = 0 then '배달완료' else '배달취소' end as 'Status'
-        , concat(f.name) as MenuName
-        , concat(c.menuCount) as MenuCount
-        , case when a.couponId is not null then c.menuCount*f.cost+b.delCost-g.benefits else c.menuCount*f.cost+b.delCost end as TotalCost
-        , case when (6371*acos(cos(radians(e.latitude))*cos(radians(h.latitude))*cos(radians(h.longtitude)-radians(e.longtitude))+sin(radians(e.latitude))*sin(radians(h.latitude)))) > 350 then '주문불가' else '주문가능' end as Available
-from Charge a
-left join ( select id
-                    , name
-                    , delCost
-                from Restaurant ) as b
-                on a.restaurantId = b.id
-left join ( select id
-                    , userId
-                    , restaurantId
-                    ,chargeId
-                    , menuId
-                    , menuCount
-                from Orders ) as c
-                on a.id = c.chargeId
-left join ( select id
-                    , restaurantId
-                    , imageUrl
-                from RestaurantImageUrl ) as d
-                on a.restaurantId = d.restaurantId
-left join ( select id
-                    , userId
-                    , latitude
-                    , longtitude
-                    , status
-                from UserAddress ) as e
-                on c.userId = e.userId
-left join ( select id
-                    , name
-                    , cost
-                from Menu ) as f
-                 on c.menuId = f.id
-left join ( select id
-                    , userId
-                    , benefits
-                    , status
-                from Coupon ) as g
-                on a.couponId = g.id
-left join ( select id
-                    , restaurantId
-                    , latitude
-                    , longtitude
-                from RestaurantAddress ) as h
-                on a.restaurantId = h.restaurantId
-left join ( select id
-                    , restaurantId
-                    , imageUrl
-                from RestaurantImageUrl) as i
-                on b.id = i.restaurantId
-where c.userId = ?
-group by c.id;`;
-  const [pastOrderRows] = await connection.query(selectPastOrderQuery, userId);
-  return pastOrderRows;
+         , case when (6371*acos(cos(radians(e.latitude))*cos(radians(h.latitude))*cos(radians(h.longtitude)-radians(e.longtitude))+sin(radians(e.latitude))*sin(radians(h.latitude)))) > 350 then '주문불가' else '주문가능' end as Available
+    from Charge a
+           left join ( select id
+                            , name
+                            , delCost
+                       from Restaurant ) as b
+                     on a.restaurantId = b.id
+           left join ( select id
+                            , userId
+                            , restaurantId
+                            ,chargeId
+                            , menuId
+                            , menuCount
+                       from Orders ) as c
+                     on a.id = c.chargeId
+           left join ( select id
+                            , restaurantId
+                            , imageUrl
+                       from RestaurantImageUrl ) as d
+                     on a.restaurantId = d.restaurantId
+           left join ( select id
+                            , userId
+                            , latitude
+                            , longtitude
+                            , status
+                       from UserAddress ) as e
+                     on c.userId = e.userId
+           left join ( select id
+                            , name
+                            , cost
+                       from Menu ) as f
+                     on c.menuId = f.id
+           left join ( select id
+                            , userId
+                            , benefits
+                            , status
+                       from Coupon ) as g
+                     on a.couponId = g.id
+           left join ( select id
+                            , restaurantId
+                            , latitude
+                            , longtitude
+                       from RestaurantAddress ) as h
+                     on a.restaurantId = h.restaurantId
+           left join ( select id
+                            , restaurantId
+                            , imageUrl
+                       from RestaurantImageUrl) as i
+                     on b.id = i.restaurantId
+    where c.userId = ?
+    group by a.id;`;
+  const [orderInfoRows] = await connection.query(query, userId);
+  return orderInfoRows;
 }
+
+// 과거 주문 내역 조회(상품 조회)
+async function getOrderFoods(connection, userId, chargeId) {
+  const query = `
+    select c.name as MenuName
+         , a.menuCount as MenuCount
+    from Orders a
+           left join ( select id
+                            , restaurantId
+                       from Charge ) as b
+                     on a.chargeId = b.id
+           left join ( select id
+                            , name
+                            , restaurantId
+                       from Menu ) as c
+                     on a.menuId = c.id
+    where a.userId = ? and b.id = ?;
+                `;
+  const [foodsRows] = await connection.query(query, [userId, chargeId]);
+  return foodsRows;
+}
+
+// 과거 주문 내역 조회(합계 가격)
+async function getTotalPrice(connection, userId, chargeId) {
+  const query = `
+    select case
+             when c.delCost = 0 then sum(a.menuCount * b.cost)
+             else sum(a.menuCount * b.cost) - c.delCost end as TotalPrice
+    from Orders a
+           left join (select id
+                           , cost
+                      from Menu) as b
+                     on a.menuId = b.id
+           left join (select id
+                           , delCost
+                      from Restaurant) as c
+                     on a.restaurantId = c.id
+    where a.userId = ?
+      and chargeId = ?;
+                `;
+  const [totalPriceRows] = await connection.query(query, [userId, chargeId]);
+  return totalPriceRows;
+}
+
+
+
 
 
 module.exports = {
   selectUser,
   selectUserEmail,
+  selectUserPhoneNum,
   selectUserId,
   insertUserInfo,
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
-  selectUser1,
   selectFavoritesList,
   updateFavoritesList,
   additFavoriteList,
-  selectPastOrder,
+  getOrdersInfo,
+  getOrderFoods,
+  getTotalPrice,
 };

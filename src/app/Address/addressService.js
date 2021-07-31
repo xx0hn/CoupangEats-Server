@@ -11,6 +11,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const {connect} = require("http2");
 
+//배송지 삭제
 exports.rmAddress = async function(userId, addressId){
     try{
         console.log(userId)
@@ -25,6 +26,7 @@ exports.rmAddress = async function(userId, addressId){
     }
 }
 
+//배송지 추가
 exports.additAddress = async function(userId, roadAddress, detailAddress){
    try {
        const connection = await pool.getConnection(async (conn) => conn);
@@ -38,6 +40,7 @@ exports.additAddress = async function(userId, roadAddress, detailAddress){
    }
 }
 
+//기본 배송지로 설정
 exports.setDefaultAddress = async function(userId, addressId) {
     try {
         const connection = await pool.getConnection(async(conn)=>conn);
