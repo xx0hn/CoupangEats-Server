@@ -28,4 +28,7 @@ module.exports = function(app) {
 
     //#19 매장 메인 화면 조회 API
     app.get('/app/restaurant/:restaurantId/main', restaurant.restaurantMain);
+
+    //#21 치타배달 매장 조회 API
+    app.get('/app/restaurant/cheetah', restaurant.cheetahRestaurant);
 };

@@ -108,3 +108,11 @@ exports.getTotalPrice = async function (userId, orderId) {
 
   return totalPriceResult;
 };
+
+//검색 순위 조회
+exports.searchRankInfo = async function(){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const getSearchRank = await userDao.selectSearchRank(connection);
+  connection.release();
+  return getSearchRank;
+}

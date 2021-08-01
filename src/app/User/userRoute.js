@@ -26,6 +26,9 @@ module.exports = function(app){
     //#18 로그인 API
     app.post('/app/signIn', user.signIn);
 
+    //#20 검색 순위 조회 API
+    app.get('/app/search/rank', user.searchRank);
+
 };
 
 

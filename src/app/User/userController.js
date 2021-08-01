@@ -174,3 +174,13 @@ exports.signIn = async function (req, res) {
 
     return res.send(signInRes);
 };
+
+/**
+ * API No. 20
+ * API Name : 검색 순위 조회 API
+ * [POST] /app/users/search/rank
+ */
+exports.searchRank = async function(req, res){
+    const searchRanking = await userProvider.searchRankInfo();
+    return res.send(response(baseResponse.SUCCESS, searchRanking));
+}

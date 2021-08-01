@@ -89,3 +89,17 @@ exports.getRestaurantImageUrl = async function(restaurantId) {
     connection.release();
     return restaurantImageUrl;
 }
+
+//치타배달 매장 조회
+exports.cheetahDeliveryRestaurant = async function(){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const cheetahDeliveryResult = await restaurantDao.selectCheetahDeliveryRestaurant(connection);
+    return cheetahDeliveryResult;
+}
+
+//매장 사진 조회
+exports.getCheetahResImageUrl = async function(restaurantId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const resImage = await restaurantDao.selectResImage(connection, restaurantId);
+    return resImage;
+}

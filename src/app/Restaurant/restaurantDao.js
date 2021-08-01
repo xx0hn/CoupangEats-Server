@@ -295,6 +295,48 @@ async function getRestaurantImageUrl (connection, restaurantId){
     return imageUrlRows;
 }
 
+//치타배달 매장 조회
+async function selectCheetahDeliveryRestaurant(connection){
+    const selectCheetahDeliveryRestaurantQuery=`
+    select a.id as id
+        , a.name as RestaurantName
+        , case when a.cheetaDel = 1 then '치타배달' end as CheetahDelivery
+        , case when starGrade is null then 0 else starGrade end as StarGrade
+        , case when reviewCount is null then 0 else reviewCount end as ReviewCount
+        , case when a.delCost = 0 then '무료배달' else concat(format(a.delCost,0),'원') end as DeliveryCost
+        , concat(a.delTIme,'-',a.maxDelTIme,'분') as DeliveryTime
+from Restaurant a
+left join ( select restaurantId
+                    , latitude
+                    , longtitude
+                from RestaurantAddress ) as b
+                on a.id = b.restaurantId
+left join ( select restaurantId
+                    , round(sum(score)/count(restaurantId), 1) as 'starGrade'
+                    , count(restaurantId) as 'reviewCount'
+                from Review
+                group by restaurantId) as c
+                on a.id = c.restaurantId
+where a.cheetaDel = 1;`;
+    const [cheetahRestaurantRows] = await connection.query(selectCheetahDeliveryRestaurantQuery);
+    return cheetahRestaurantRows;
+}
+
+//매장 이미지 조회
+async function selectResImage(connection, restaurantId){
+    const selectResImageQuery=`
+    select a.id as restaurantId
+            , b.imageUrl
+from Restaurant a
+left join ( select restaurantId
+                , imageUrl
+                from RestaurantImageUrl ) as b
+                on a.id = b.restaurantId
+where a.id = ?;`;
+    const [resImageRows] = await connection.query(selectResImageQuery, restaurantId);
+    return resImageRows;
+}
+
 module.exports = {
     selectCategory,
     selectNewRestaurant,
@@ -310,4 +352,6 @@ module.exports = {
     getMenuInCategory,
     getSomeReview,
     getRestaurantImageUrl,
+    selectCheetahDeliveryRestaurant,
+    selectResImage,
 };

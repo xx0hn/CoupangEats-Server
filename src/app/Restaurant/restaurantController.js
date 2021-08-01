@@ -139,3 +139,18 @@ exports.restaurantMain = async function(req, res){
     restaurantMain.push(result);
     return res.send(response(baseResponse.SUCCESS, restaurantMain));
 }
+
+/**
+ * API No. 21
+ * API Name : 치타배달 매장 조회 API
+ *[GET] /app/restaurant/cheetah
+ */
+exports.cheetahRestaurant = async function(req, res){
+    const cheetahDeliveryRes = await restaurantProvider.cheetahDeliveryRestaurant();
+    const result = [];
+    for(let i =0; i<cheetahDeliveryRes.length; i++){
+        const cheetahResImage = await restaurantProvider.getCheetahResImageUrl(cheetahDeliveryRes[i].id);
+        result.push({restaurantInfo: cheetahDeliveryRes[i], restaurantImageUrl: cheetahResImage});
+    }
+    return res.send(response(baseResponse.SUCCESS, result));
+}

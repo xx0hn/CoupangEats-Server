@@ -295,6 +295,17 @@ async function getTotalPrice(connection, userId, chargeId) {
   return totalPriceRows;
 }
 
+//검색 순위 조회
+async function selectSearchRank(connection){
+  const selectSearchRankQuery=`
+  select row_number() over (order by count(categoryId) desc ) as SearchRanking
+            , name as Search
+            , count(categoryId) as SearchCount
+from Search
+group by categoryId;`;
+  const [searchRankRows] = await connection.query(selectSearchRankQuery);
+  return searchRankRows;
+}
 
 
 
@@ -314,4 +325,5 @@ module.exports = {
   getOrdersInfo,
   getOrderFoods,
   getTotalPrice,
+  selectSearchRank,
 };
