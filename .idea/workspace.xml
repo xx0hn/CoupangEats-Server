@@ -5,6 +5,15 @@
       <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
+=======
+      <change beforePath="$PROJECT_DIR$/config/database.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/database.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/2021-08-02-smart-push.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/2021-08-02-smart-push.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/Address/addressDao.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Address/addressDao.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/User/userController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/User/userDao.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userDao.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/User/userService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userService.js" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +93,7 @@
       <updated>1627387592191</updated>
       <workItem from="1627458500183" duration="438000" />
       <workItem from="1627459370120" duration="1921000" />
-      <workItem from="1627469678749" duration="107612000" />
+      <workItem from="1627469678749" duration="113775000" />
     </task>
     <servers />
   </component>
