@@ -317,11 +317,11 @@ async function postOrders(connection, userId, restaurantId, menuId, menuCount){
 }
 
 //결제
-async function postPayment(connection, cardId, couponId, restaurantId){
+async function postPayment(connection, cardId, couponId, restaurantId, request){
   const postPaymentQuery=`
-  insert into Charge(cardId, couponId, restaurantId)
-  values (?,?,?);`;
-  const [postPaymentRows] = await connection.query(postPaymentQuery, [cardId, couponId, restaurantId]);
+  insert into Charge(cardId, couponId, restaurantId, request)
+  values (?,?,?,?);`;
+  const [postPaymentRows] = await connection.query(postPaymentQuery, [cardId, couponId, restaurantId, request]);
   return postPaymentRows;
 }
 

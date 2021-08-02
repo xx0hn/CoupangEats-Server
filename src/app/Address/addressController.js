@@ -32,7 +32,7 @@ exports.removeAddress = async function(req, res) {
     if(!addressId) return res.send(response(baseResponse.ADDRESS_ID_EMPTY));
 
     const removeAddressId = await addressService.rmAddress(userId, addressId);
-    return res.send(response(baseResponse.SUCCESS, removeAddressId));
+    return res.send(response(removeAddressId));
 }
 
 /**

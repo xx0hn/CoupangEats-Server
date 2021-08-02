@@ -206,10 +206,10 @@ exports.addOrders = async function(req, res){
  * [POST] /app/payment
  */
 exports.payment = async function(req, res){
-    const {cardId, couponId, restaurantId} = req.body;
+    const {cardId, couponId, restaurantId, request} = req.body;
     if(!cardId) return res.send(response(baseResponse.CARD_ID_EMPTY));
     if(!restaurantId) return res.send(response(baseResponse.RESTAURANT_ID_EMPTY));
-    const addPayment = await userService.addPayment(cardId, couponId, restaurantId);
+    const addPayment = await userService.addPayment(cardId, couponId, restaurantId, request);
     return res.send(response(addPayment));
 }
 

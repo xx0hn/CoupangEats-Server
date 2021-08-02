@@ -16,8 +16,8 @@ async function rmAddressInfo(connection, userId, addressId){
     const rmAddressInfoResultQuery=`
     update UserAddress
     set status = 2
-    where id = ?`;
-    const [existAddressRows] = await connection.query(rmAddressInfoResultQuery, userId, addressId);
+    where userId = ? and id = ?`;
+    const [existAddressRows] = await connection.query(rmAddressInfoResultQuery, [userId, addressId]);
     return existAddressRows;
 }
 
@@ -35,7 +35,7 @@ async function defaultAddressInfo(connection, userId, addressId){
     const defaultAddressResultQuery=`
     update UserAddress
 set status = 1
-where id = ?;`
+where userId = ? and id = ?;`
     const [defaultAddressRows] = await connection.query(defaultAddressResultQuery, [userId, addressId]);
     return defaultAddressRows;
 }

@@ -149,10 +149,10 @@ exports.addOrders = async function (userId, restaurantId, menuId, menuCount){
 }
 
 //결제
-exports.addPayment = async function (cardId, couponId, restaurantId){
+exports.addPayment = async function (cardId, couponId, restaurantId, request){
     try{
         const connection = await pool.getConnection(async(conn)=>conn);
-        const addPayment = await userDao.postPayment(connection, cardId, couponId, restaurantId);
+        const addPayment = await userDao.postPayment(connection, cardId, couponId, restaurantId, request);
         connection.release();
         return response(baseResponse.SUCCESS);
     } catch(err){
