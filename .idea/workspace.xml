@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="50e1ecf1-ccd0-4961-a498-6c8f32b205f8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/baseResponseStatus.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/baseResponseStatus.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/2021-08-02-smart-push.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/2021-08-02-smart-push.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/User/userController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/User/userDao.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userDao.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/User/userRoute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userRoute.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/User/userService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +55,11 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
