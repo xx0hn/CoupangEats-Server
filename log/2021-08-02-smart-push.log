@@ -92,3 +92,11 @@
 {"message":"App - signOutUser Service error\n: Cannot read property 'password' of undefined","level":"error","timestamp":"2021-08-02 17:21:36"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 18:10:11"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 18:33:55"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 20:40:41"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 20:43:05"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 21:09:26"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 21:09:28"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 21:17:49"}
+{"message":"App - removeAddress Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 21:18:42"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 21:19:06"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 21:19:29"}
