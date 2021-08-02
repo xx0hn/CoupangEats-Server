@@ -186,3 +186,29 @@ exports.patchCard = async function (cardId){
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+//사용자 회원 탈퇴
+// exports.signOutUser = async function (userId, email, password){
+//     try{
+//         const connection = await pool.getConnection(async(conn)=>conn);
+//         const emailRows = await userProvider.emailCheck(email);
+//         if (emailRows.length < 1) return errResponse(baseResponse.SIGNOUT_EMAIL_WRONG);
+//         const selectEmail = emailRows[0].email
+//         // 비밀번호 확인
+//         const hashedPassword = await crypto
+//             .createHash("sha512")
+//             .update(password)
+//             .digest("hex");
+//         const selectUserPasswordParams = [userId, selectEmail, hashedPassword];
+//         const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
+//         if (passwordRows[0].password !== hashedPassword) {
+//             return errResponse(baseResponse.SIGNOUT_PASSWORD_WRONG);
+//         }
+//         const signOutUser = await userDao.signOutUser(selectUserPasswordParams);
+//         connection.release();
+//         return response(baseResponse.SUCCESS);
+//     } catch(err){
+//         logger.error(`App - signOutUser Service error\n: ${err.message}`);
+//         return errResponse(baseResponse.DB_ERROR);
+//     }
+// }

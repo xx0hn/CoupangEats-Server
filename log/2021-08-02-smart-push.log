@@ -81,3 +81,14 @@
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:06:59"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:12:05"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 16:27:21"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 17:09:34"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 17:13:16"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 17:13:20"}
+{"message":"App - signOutUser Service error\n: Cannot read property 'password' of undefined","level":"error","timestamp":"2021-08-02 17:14:32"}
+{"message":"App - signOutUser Service error\n: Cannot read property 'password' of undefined","level":"error","timestamp":"2021-08-02 17:18:27"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 17:20:10"}
+{"message":"App - signOutUser Service error\n: Cannot read property 'password' of undefined","level":"error","timestamp":"2021-08-02 17:20:13"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 17:21:33"}
+{"message":"App - signOutUser Service error\n: Cannot read property 'password' of undefined","level":"error","timestamp":"2021-08-02 17:21:36"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 18:10:11"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 18:33:55"}

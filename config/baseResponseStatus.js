@@ -31,6 +31,8 @@ module.exports = {
     USER_USEREMAIL_NOT_EXIST : { "isSuccess": false, "code": 2015, "message": "해당 이메일을 가진 회원이 존재하지 않습니다." },
     USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2016, "message": "유저 아이디 값을 확인해주세요" },
     USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 2017, "message": "변경할 닉네임 값을 입력해주세요" },
+    USER_INFO_EMPTY : {"isSuccess": false, "code": 2041, "message": "유저 정보를 입력해주세요. "},
+
 
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
 
@@ -73,6 +75,9 @@ module.exports = {
     SIGNIN_PASSWORD_EMPTY : { "isSuccess": false, "code": 3006, "message": "비밀번호를 입력 해주세요." },
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": false, "code": 3007, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },
     SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": false, "code": 3008, "message": "탈퇴 된 계정입니다. 고객센터에 문의해주세요." },
+
+    SIGNOUT_EMAIL_WRONG : {"isSuccess": false, "code": 3009, "message": "아이디가 잘못 되었습니다. "},
+    SIGNOUT_PASSWORD_WRONG : { "isSuccess": false, "code": 3010, "message": "비밀번호가 잘못 되었습니다." },
 
 
     //Connection, Transaction 등의 서버 오류

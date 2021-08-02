@@ -257,11 +257,17 @@ exports.patchCard = async function (req, res){
     return res.send(response(baseResponse.SUCCESS));
 }
 
-/**
- * API No. 28
- * API Name : 탈퇴하기 API
- * [PATCH] /app/signOut
- */
-exports.signOut = async function (req, res){
-    cosn
-}
+// /**
+//  * API No. 28
+//  * API Name : 탈퇴하기 API
+//  * [PATCH] /app/signOut
+//  */
+// exports.signOut = async function (req, res){
+//     const {userId, email, password} = req.body;
+//     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+//     if(!email) return res.send(response(baseResponse.USER_USEREMAIL_EMPTY));
+//     if(!password) return res.send(response(baseResponse.SIGNIN_PASSWORD_EMPTY));
+//     const signOut = await userService.signOutUser(userId, email, password);
+//     return res.send(response(baseResponse.SUCCESS));
+//
+// }

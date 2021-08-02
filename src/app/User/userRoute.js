@@ -45,7 +45,7 @@ module.exports = function(app){
     app.patch('/app/users/:userId/deleteCard', user.patchCard);
 
     //#28 탈퇴하기 API
-    app.patch('/app/signOut', user.signOut);
+    // app.patch('/app/signOut', user.signOut)
 };
 
 

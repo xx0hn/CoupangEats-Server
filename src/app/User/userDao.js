@@ -360,6 +360,16 @@ async function patchUserCard(connection, cardId){
   const [patchCardRows] = await connection.query(patchUserCardQuery, [cardId]);
   return patchCardRows;
 }
+
+// //사용자 회원 탈퇴
+// async function signOutUser(connection, selectUserPasswordParams){
+//   const signOutUserQuery=`
+//   update User
+// set status = 2
+// where id = ? and email = ? and password = ?;`;
+//   const [signOutRows] = await connection.query(signOutUserQuery, selectUserPasswordParams);
+//   return signOutRows;
+// }
 module.exports = {
   selectUser,
   selectUserEmail,
@@ -381,4 +391,5 @@ module.exports = {
   selectUserCardList,
   postUserCard,
   patchUserCard,
+  // signOutUser
 };
