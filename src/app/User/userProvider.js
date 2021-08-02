@@ -116,3 +116,11 @@ exports.searchRankInfo = async function(){
   connection.release();
   return getSearchRank;
 }
+
+//사용자 카드 조회
+exports.getCardList = async function(userId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const getUserCard = await userDao.selectUserCardList(connection, userId);
+  connection.release();
+  return getUserCard;
+}

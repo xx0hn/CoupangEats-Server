@@ -29,6 +29,23 @@ module.exports = function(app){
     //#20 검색 순위 조회 API
     app.get('/app/search/rank', user.searchRank);
 
+    //#23 메뉴 담기 API
+    app.post('/app/users/add/orders', user.addOrders);
+
+    //#24 결제 API
+    app.post('/app/payment', user.payment);
+
+    //#25 사용자 카드 조회 API
+    app.get('/app/users/:userId/card', user.getCard);
+
+    //#26 사용자 카드 등록 API
+    app.post('/app/users/card/add', user.postCard);
+
+    //#27 사용자 카드 삭제 API
+    app.patch('/app/users/:userId/deleteCard', user.patchCard);
+
+    //#28 탈퇴하기 API
+    app.patch('/app/signOut', user.signOut);
 };
 
 

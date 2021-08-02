@@ -2,18 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="50e1ecf1-ccd0-4961-a498-6c8f32b205f8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/log/2021-08-01-smart-push.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/2021-08-02-smart-push.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/baseResponseStatus.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/baseResponseStatus.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log/.6c1a1f7b9023a40cab0375214d702bb453b1bc33-audit.json" beforeDir="false" afterPath="$PROJECT_DIR$/log/.6c1a1f7b9023a40cab0375214d702bb453b1bc33-audit.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/2021-07-31-smart-push.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/2021-07-31-smart-push.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/Address/addressProvider.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Address/addressProvider.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/Address/addressService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Address/addressService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/2021-08-01-smart-push.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/2021-08-01-smart-push.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/Restaurant/restaurantController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Restaurant/restaurantController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/Restaurant/restaurantDao.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Restaurant/restaurantDao.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/Restaurant/restaurantProvider.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Restaurant/restaurantProvider.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/Restaurant/restaurantRoute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Restaurant/restaurantRoute.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/Restaurant/restaurantService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Restaurant/restaurantService.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/User/userController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/User/userDao.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userDao.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/User/userProvider.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/User/userProvider.js" afterDir="false" />
@@ -93,7 +90,7 @@
       <updated>1627387592191</updated>
       <workItem from="1627458500183" duration="438000" />
       <workItem from="1627459370120" duration="1921000" />
-      <workItem from="1627469678749" duration="83186000" />
+      <workItem from="1627469678749" duration="104271000" />
     </task>
     <servers />
   </component>

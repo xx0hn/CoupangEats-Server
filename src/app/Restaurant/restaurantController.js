@@ -154,3 +154,21 @@ exports.cheetahRestaurant = async function(req, res){
     }
     return res.send(response(baseResponse.SUCCESS, result));
 }
+
+/**
+ * API No. 22
+ * API Name : 사진 없는 매장 리뷰 상세 조회 API
+ *[GET] /app/restaurant/:restaurantId/review
+ */
+exports.reviewGet = async function (req, res){
+    const restaurantId = req.params.restaurantId;
+    const getNonPhotoReview = await restaurantProvider.getNonPhotoReview(restaurantId);
+    const getReviews = await restaurantProvider.getNonReviews(restaurantId);
+    const result = [];
+    for(let i=0; i<getReviews.length; i++){
+        const getOrderedMenu = await restaurantProvider.getOrderedMenu(getReviews[i].id);
+        result.push({Review: getReviews[i], OrderedMenu: getOrderedMenu});
+    }
+    getNonPhotoReview.push(result);
+    return res.send(response(baseResponse.SUCCESS, getNonPhotoReview));
+}

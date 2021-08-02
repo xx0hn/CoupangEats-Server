@@ -337,6 +337,79 @@ where a.id = ?;`;
     return resImageRows;
 }
 
+//매장 리뷰 전체 정보 조회 (사진 없는)
+async function selectNonPhotoReview(connection, restaurantId){
+    const selectNonPhotoReviewQuery=`
+    select a.id as id
+        , concat(a.name, '리뷰') as RestaurantNameReview
+        , starGrade as StarGrade
+        , reviewCount as ReviewCount
+from Restaurant a
+left join ( select round(sum(score)/count(restaurantId), 1) as 'starGrade'
+                        , count(restaurantId) as 'reviewCount'
+                        , createdAt
+                        , restaurantId
+                from Review 
+                group by restaurantId) as b
+                on a.id = b.restaurantId
+where a.id = ?;`;
+    const [nonPhotoRestaurantInfoRows] = await connection.query(selectNonPhotoReviewQuery, restaurantId);
+    return nonPhotoRestaurantInfoRows;
+}
+
+//사진 없는 리뷰 조회
+async function selectNonReviews(connection, restaurantId){
+    const selectNonReviewsQuery=`
+    select  a.chargeId as id
+           , d.id as UserId
+            , concat(left(d.name, 1), '**') as UserName
+            , a.score as StarGrade
+            , concat(timestampdiff(day, a.createdAt, current_timestamp), '일전') as DaysAgo
+            , a.contents as ReviewContents
+from Review a
+left join ( select id
+                from Restaurant ) as b
+                on a.restaurantId = b.id
+left join ( select id
+                    , userId
+                    , restaurantId
+                    , chargeId
+                    , menuId
+                from Orders 
+                group by restaurantId) as c
+                on a.restaurantId = c.restaurantId
+left join ( select id
+                    , name
+                from User ) as d
+                on a.userId = d.id
+where b.id = ? and a.imageUrl is null
+order by a.createdAt desc;`;
+    const [nonReviewsRows] = await connection.query(selectNonReviewsQuery, restaurantId);
+    return nonReviewsRows;
+}
+
+//사진 없는 리뷰 음식 조회
+async function selectNonPhotoReviewMenu(connection, chargeId){
+    const selectNonPhotoReviewMenuQuery=`
+    select c.name      as MenuName
+             , b.menuCount as MenuCount
+        from Charge a
+                 left join (select id
+                                 , chargeId
+                                 , menuId
+                                 , menuCount
+                                 , restaurantId
+                            from Orders) as b
+                           on a.id = b.chargeId
+                 left join (select id
+                                 , name
+                                 , restaurantId
+                            from Menu) as c
+                           on b.menuId = c.id
+        where a.id = ?;`;
+    const [nonPhotoReviewMenuRows] = await connection.query(selectNonPhotoReviewMenuQuery, chargeId);
+    return nonPhotoReviewMenuRows;
+}
 module.exports = {
     selectCategory,
     selectNewRestaurant,
@@ -354,4 +427,7 @@ module.exports = {
     getRestaurantImageUrl,
     selectCheetahDeliveryRestaurant,
     selectResImage,
+    selectNonPhotoReview,
+    selectNonReviews,
+    selectNonPhotoReviewMenu,
 };

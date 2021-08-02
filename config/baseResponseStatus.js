@@ -52,6 +52,16 @@ module.exports = {
 
     CHARGE_ID_EMPTY : {"isSuccess" : false, "code" : 2035, "message": "chargeId를 입력해주세요. "},
 
+    MENU_ID_EMPTY : {"isSuccess" : false, "code": 2036, "message": "menuId를 입력해주세요. "},
+    MENU_COUNT_EMPTY: {"isSuccess": false, "code": 2037, "message": "menuCount를 입력해주세요. "},
+
+    CARD_ID_EMPTY : {"isSuccess": false, "code" : 2038, "message": "cardId를 입력해주세요. "},
+    CARD_NUM_EMPTY : {"isSuccess": false, "code" : 2039, "message": "cardNum을 입력해주세요. "},
+
+    BANK_ID_EMPTY: {"isSuccess": false, "code": 2040, "message": "bankId를 입력해주세요. "},
+
+
+
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

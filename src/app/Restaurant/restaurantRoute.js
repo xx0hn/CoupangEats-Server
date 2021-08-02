@@ -31,4 +31,7 @@ module.exports = function(app) {
 
     //#21 치타배달 매장 조회 API
     app.get('/app/restaurant/cheetah', restaurant.cheetahRestaurant);
+
+    //#22 사진 없는 매장 리뷰 조회 API
+    app.get('/app/restaurant/:restaurantId/review', restaurant.reviewGet);
 };

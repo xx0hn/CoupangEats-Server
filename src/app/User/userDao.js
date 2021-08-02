@@ -159,7 +159,7 @@ left join ( select restaurantId
                 from RestaurantImageUrl
                 group by restaurantId ) as h
                 on a.restaurantId = h.restaurantId
-where a.userId= ?
+where a.userId= ? and a.status = 0
 group by a.restaurantId
 order by orderCount desc;`;
   const [userFavoritesRows] = await connection.query(selectUsersFavoritesResultQuery, userId);
@@ -167,12 +167,12 @@ order by orderCount desc;`;
 }
 
 //즐겨찾기 항목 삭제
-async function updateFavoritesList(connection, userId, favoritesId){
+async function updateFavoritesList(connection, favoritesId){
   const updateFavoritesListQuery =`
   update Favorites
 set status = 2
-where userId = ? and id = ?;`;
-  const [existFavoritesRows] = await connection.query(updateFavoritesListQuery, userId, [favoritesId]);
+where id = ?;`;
+  const [existFavoritesRows] = await connection.query(updateFavoritesListQuery, [favoritesId]);
   return existFavoritesRows;
 }
 
@@ -307,9 +307,59 @@ group by categoryId;`;
   return searchRankRows;
 }
 
+//주문 추가
+async function postOrders(connection, userId, restaurantId, menuId, menuCount){
+  const postOrdersQuery=`
+     insert into Orders(userId, restaurantId, menuId, menuCount)
+    values (?, ?, ?, ?);`;
+  const [postOrdersRows] = await connection.query(postOrdersQuery, [userId, restaurantId, menuId, menuCount]);
+  return postOrdersRows;
+}
 
+//결제
+async function postPayment(connection, cardId, couponId, restaurantId){
+  const postPaymentQuery=`
+  insert into Charge(cardId, couponId, restaurantId)
+  values (?,?,?);`;
+  const [postPaymentRows] = await connection.query(postPaymentQuery, [cardId, couponId, restaurantId]);
+  return postPaymentRows;
+}
 
+//사용자 카드 조회
+async function selectUserCardList(connection, userId){
+  const selectUserCardListQuery=`
+  select a.userId as UserId
+        , a.id as CardId
+        , b.name as BankName
+        , concat('****', right(a.cardNum, 4)) as CardNum
+from Card a
+left join ( select id
+                    , name
+                from Bank ) as b
+                on a.bankId = b.id
+where a.userId = ? and a.status = 0;`;
+  const [userCardsRows] = await connection.query(selectUserCardListQuery, userId);
+  return userCardsRows;
+}
 
+//사용자 카드 등록
+async function postUserCard(connection, userId, bankId, cardNum){
+  const postUserCardQuery=`
+     insert into Card(userId, bankId, cardnum)
+    values (?,?,?);`;
+  const [userCardRows] = await connection.query(postUserCardQuery, [userId, bankId, cardNum]);
+  return userCardRows;
+}
+
+//사용자 카드 삭제
+async function patchUserCard(connection, cardId){
+  const patchUserCardQuery=`
+    update Card
+    set status = 2
+    where id = ?;`;
+  const [patchCardRows] = await connection.query(patchUserCardQuery, [cardId]);
+  return patchCardRows;
+}
 module.exports = {
   selectUser,
   selectUserEmail,
@@ -326,4 +376,9 @@ module.exports = {
   getOrderFoods,
   getTotalPrice,
   selectSearchRank,
+  postOrders,
+  postPayment,
+  selectUserCardList,
+  postUserCard,
+  patchUserCard,
 };

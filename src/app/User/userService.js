@@ -42,10 +42,10 @@ exports.addFavoriteList = async function (userId, restaurantId) {
     }
 }
 //즐겨찾기 삭제
-exports.deleteFavorite = async function (userId, favoritesId){
+exports.deleteFavorite = async function (favoritesId){
     try{
         const connection = await pool.getConnection(async(conn)=>conn);
-        const editFavoritesList = await userDao.updateFavoritesList(connection, userId, favoritesId);
+        const editFavoritesList = await userDao.updateFavoritesList(connection, favoritesId);
         connection.release();
 
         return response(baseResponse.SUCCESS);
@@ -134,3 +134,55 @@ exports.postUserSignIn = async function (email, password) {
     }
 };
 
+//메뉴 담기
+exports.addOrders = async function (userId, restaurantId, menuId, menuCount){
+    try{
+        // const insertOrdersParams = [restaurantId, menuId, menuCount];
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const addOrders = await userDao.postOrders(connection, userId, restaurantId, menuId, menuCount);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - postOrders Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//결제
+exports.addPayment = async function (cardId, couponId, restaurantId){
+    try{
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const addPayment = await userDao.postPayment(connection, cardId, couponId, restaurantId);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - postPayment Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//사용자 카드 등록
+exports.postCardList = async function (userId, bankId, cardNum){
+    try{
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const addCardList = await userDao.postUserCard(connection, userId, bankId, cardNum);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    }catch(err){
+        logger.error(`App - postUserCard Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//사용자 카드 삭제
+exports.patchCard = async function (cardId){
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const deleteCard = await userDao.patchUserCard(connection, cardId);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - patchUserCard Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

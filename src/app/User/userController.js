@@ -68,7 +68,7 @@ exports.getFavorite = async function(req, res){
 /**
  * API No. 9
  * API Name : 즐겨찾기 항목 삭제 API
- * [PATCH] /app/users/favorites/edit
+ * [PATCH] /app/users/{userId}/deleteFavorite
  */
 exports.removeFavorite = async function(req, res) {
     const userId = req.params.userId;
@@ -77,7 +77,7 @@ exports.removeFavorite = async function(req, res) {
     if(!favorites) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
     else {
         for(let i=0; i<favorites.length; i++){
-            const deleteFavorite = await userService.deleteFavorite(userId, favorites[i].favorites);
+            const deleteFavorite = await userService.deleteFavorite(favorites[i].favorites);
         }
     }
     return res.send(response(baseResponse.SUCCESS));
@@ -98,7 +98,7 @@ exports.addFavorite = async function(req, res){
 
 /**
  * API No. 11
- * API Name : 과거 주문내역 조회API
+ * API Name : 과거 주문내역 조회 API
  * [GET] /app/users/{userId}/pastorder
  */
 exports.getPastOrders = async function(req, res){
@@ -117,7 +117,7 @@ exports.getPastOrders = async function(req, res){
 /**
  * API No. 17
  * API Name : 회원가입 API
- * [GET] /app/signUp
+ * [POST] /app/signUp
  */
 exports.signUp = async function (req, res) {
     const {email, password, name, phoneNum, sex} = req.body;
@@ -183,4 +183,85 @@ exports.signIn = async function (req, res) {
 exports.searchRank = async function(req, res){
     const searchRanking = await userProvider.searchRankInfo();
     return res.send(response(baseResponse.SUCCESS, searchRanking));
+}
+
+/**
+ * API No. 23
+ * API Name : 메뉴 담기 API
+ * [POST] /app/users/:userId/addOrders
+ */
+exports.addOrders = async function(req, res){
+    const {userId, restaurantId, menuId, menuCount} = req.body;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!restaurantId) return res.send(response(baseResponse.RESTAURANT_ID_EMPTY));
+    if(!menuId) return res.send(response(baseResponse.MENU_ID_EMPTY));
+    if(!menuCount) return res.send(response(baseResponse.MENU_COUNT_EMPTY));
+    const addOrders = await userService.addOrders(userId, restaurantId, menuId, menuCount);
+    return res.send(response(addOrders));
+}
+
+/**
+ * API No. 24
+ * API Name : 결제 API
+ * [POST] /app/payment
+ */
+exports.payment = async function(req, res){
+    const {cardId, couponId, restaurantId} = req.body;
+    if(!cardId) return res.send(response(baseResponse.CARD_ID_EMPTY));
+    if(!restaurantId) return res.send(response(baseResponse.RESTAURANT_ID_EMPTY));
+    const addPayment = await userService.addPayment(cardId, couponId, restaurantId);
+    return res.send(response(addPayment));
+}
+
+/**
+ * API No. 25
+ * API Name : 사용자 카드 조회 API
+ * [GET] /app/user/:userId/card
+ */
+exports.getCard = async function(req, res){
+    const userId = req.params.userId;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    const getCardList = await userProvider.getCardList(userId);
+    return res.send(response(baseResponse.SUCCESS, getCardList));
+}
+
+/**
+ * API No. 26
+ * API Name : 사용자 카드 등록 API
+ * [POST] /app/users/card/add
+ */
+exports.postCard = async function(req, res){
+    const {userId, bankId, cardNum} = req.body;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!bankId) return res.send(response(baseResponse.BANK_ID_EMPTY));
+    if(!cardNum) return res.send(response(baseResponse.CARD_NUM_EMPTY));
+    const postCardList = await userService.postCardList(userId, bankId, cardNum);
+    return res.send(response(postCardList));
+}
+
+/**
+ * API No. 27
+ * API Name : 사용자 카드 삭제 API
+ * [PATCH] /app/users/:userId/deleteCard
+ */
+exports.patchCard = async function (req, res){
+    const userId = req.params.userId;
+    const cardId = req.body;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!cardId) return res.send(response(baseResponse.CARD_ID_EMPTY));
+    else {
+        for(let i=0; i<cardId.length; i++){
+            const patchCard = await userService.patchCard(cardId[i].cardId);
+        }
+    }
+    return res.send(response(baseResponse.SUCCESS));
+}
+
+/**
+ * API No. 28
+ * API Name : 탈퇴하기 API
+ * [PATCH] /app/signOut
+ */
+exports.signOut = async function (req, res){
+    cosn
 }

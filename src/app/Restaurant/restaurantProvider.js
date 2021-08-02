@@ -103,3 +103,24 @@ exports.getCheetahResImageUrl = async function(restaurantId){
     const resImage = await restaurantDao.selectResImage(connection, restaurantId);
     return resImage;
 }
+
+//매장 리뷰 전체 정보 조회(사진없는)
+exports.getNonPhotoReview = async function(restaurantId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const reviewResult = await restaurantDao.selectNonPhotoReview(connection, restaurantId);
+    return reviewResult;
+}
+
+//사진 없는 리뷰 조회
+exports.getNonReviews = async function(restaurantId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const nonReviews = await restaurantDao.selectNonReviews(connection, restaurantId);
+    return nonReviews;
+}
+
+//사진 없는 리뷰 음식 조회
+exports.getOrderedMenu = async function(chargeId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const nonPhotoReviewMenu = await restaurantDao.selectNonPhotoReviewMenu(connection, chargeId);
+    return nonPhotoReviewMenu;
+}

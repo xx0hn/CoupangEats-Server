@@ -1,0 +1,83 @@
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 11:50:12"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 11:57:15"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 11:58:07"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 11:59:04"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 11:59:23"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 12:02:40"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 12:13:41"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 12:13:55"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 12:53:24"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ? , ?)' at line 2","level":"error","timestamp":"2021-08-02 12:55:44"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 12:57:09"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 12:58:16"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 12:58:52"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:00:21"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:00:31"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:00:33"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:01:23"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:02:46"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:02:49"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:03:22"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:03:24"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:06:23"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:06:27"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:08:12"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:08:14"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:09:29"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:09:34"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:10:32"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?,?,?)' at line 2","level":"error","timestamp":"2021-08-02 13:10:36"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:16:22"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?,?,?,?)' at line 2","level":"error","timestamp":"2021-08-02 13:16:26"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:20:54"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:20:58"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:22:35"}
+{"message":"App - postOrders Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 2","level":"error","timestamp":"2021-08-02 13:22:43"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:25:09"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:44:26"}
+{"message":"App - postPayment Service error\n: connection.query is not a function","level":"error","timestamp":"2021-08-02 13:48:49"}
+{"message":"App - postPayment Service error\n: connection.query is not a function","level":"error","timestamp":"2021-08-02 13:50:40"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:52:26"}
+{"message":"App - postPayment Service error\n: connection.query is not a function","level":"error","timestamp":"2021-08-02 13:52:29"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 13:53:45"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:05:37"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:12:33"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:13:16"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:14:04"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:15:54"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:24:14"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:27:17"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:28:40"}
+{"message":"App - postUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?,?)' at line 2","level":"error","timestamp":"2021-08-02 14:29:20"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:30:24"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:31:31"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:31:44"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:48:24"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:50:11"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:51:27"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 14:51:38"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:52:28"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 14:52:30"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 14:52:37"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 14:56:45"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:57:25"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 14:57:38"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:59:10"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 14:59:56"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:00:24"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:01:07"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:01:29"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 15:02:09"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:02:28"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 15:02:30"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:03:09"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 15:03:12"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:03:24"}
+{"message":"App - patchUserCard Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 15:03:26"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:04:09"}
+{"message":"App - editFavorites Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 15:04:27"}
+{"message":"App - editFavorites Service error\n: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 3","level":"error","timestamp":"2021-08-02 15:04:49"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:05:49"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:06:59"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 15:12:05"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-02 16:27:21"}
