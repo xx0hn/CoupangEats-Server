@@ -2,6 +2,7 @@
 node_modules/*
 package-lock.json
 log/*
+config/database.js
 README.md
 secret.js
 .DS_Store
