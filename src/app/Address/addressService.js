@@ -14,7 +14,6 @@ const {connect} = require("http2");
 //배송지 삭제
 exports.rmAddress = async function(userId, addressId){
     try{
-        console.log(userId)
         const connection = await pool.getConnection(async (conn)=>conn);
         const rmAddressResult = await addressDao.rmAddressInfo(connection, userId, addressId);
         connection.release();
@@ -27,10 +26,10 @@ exports.rmAddress = async function(userId, addressId){
 }
 
 //배송지 추가
-exports.additAddress = async function(userId, roadAddress, detailAddress){
+exports.additAddress = async function(userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude){
    try {
        const connection = await pool.getConnection(async (conn) => conn);
-       const additAddressResult = await addressDao.additAddressInfo(connection, userId, roadAddress, detailAddress);
+       const additAddressResult = await addressDao.additAddressInfo(connection, userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude);
        connection.release();
 
        return response(baseResponse.SUCCESS);
@@ -42,14 +41,19 @@ exports.additAddress = async function(userId, roadAddress, detailAddress){
 
 //기본 배송지로 설정
 exports.setDefaultAddress = async function(userId, addressId) {
+    const connection = await pool.getConnection(async(conn)=>conn);
     try {
-        const connection = await pool.getConnection(async(conn)=>conn);
+        await connection.beginTransaction();
+        const defaultAddressSetting = await addressDao.defaultAddressSetting(connection, userId);
         const defaultAddressResult = await addressDao.defaultAddressInfo(connection, userId, addressId);
-        connection.release();
-
+        await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
         logger.error(`App - defaultAddress Service error\n: ${err.message}`);
+        await connection.rollback();
         return errResponse(baseResponse.DB_ERROR);
+    }
+    finally{
+        connection.release();
     }
 }

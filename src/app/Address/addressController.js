@@ -10,11 +10,15 @@ const {emit} = require("nodemon");
 /**
  * API No. 1
  * API Name : 유저 배달지 조회 API
- * [GET] /app/users/:userId/address
+ * [GET] /app/users/:userId/addresses
  */
 exports.getAddress = async function(req, res) {
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
 
     const addressByUserId = await addressProvider.retrieveAddress(userId);
     return res.send(response(baseResponse.SUCCESS, addressByUserId));
@@ -23,12 +27,17 @@ exports.getAddress = async function(req, res) {
 /**
  * API No. 5
  * API Name : 유저 배달지 삭제 API
- * [PATCH] /app/users/address/edit
+ * [PATCH] /app/users/{userId}/addresses
  */
 exports.removeAddress = async function(req, res) {
-    const {userId, addressId} = req.body;
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {addressId} = req.body;
 
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!addressId) return res.send(response(baseResponse.ADDRESS_ID_EMPTY));
 
     const removeAddressId = await addressService.rmAddress(userId, addressId);
@@ -38,28 +47,40 @@ exports.removeAddress = async function(req, res) {
 /**
  * API No. 6
  * API Name : 유저 배달지 추가 API
- * [POST] /app/users/address/add
+ * [POST] /app/users/{userId}/addresses
  */
 exports.addAddress = async function(req, res) {
-    const {userId, roadAddress, detailAddress} = req.body;
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {roadAddress, detailAddress, roadNavigate, latitude, longtitude} = req.body;
 
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!roadAddress) return res.send(response(baseResponse.ROAD_ADDRESS_EMPTY));
     if(!detailAddress) return res.send(response(baseResponse.DETAIL_ADDRESS_EMPTY));
+    if(!latitude) return res.send(response(baseResponse.LATITUDE_EMPTY));
+    if(!longtitude) return res.send(response(baseResponse.LONGTITUDE_EMPTY));
 
-    const addAddressInfo = await addressService.additAddress(userId, roadAddress, detailAddress);
+    const addAddressInfo = await addressService.additAddress(userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude);
     return res.send(response(addAddressInfo));
 }
 
 /**
  * API No. 7
- * API Name : 유저 배달지 설정 API
- * [POST] /app/users/address/default
+ * API Name : 유저 기본 배달지 설정 API
+ * [PATCH] /app/users/{userId}/default-address
  */
 exports.defaultAddress = async function(req, res) {
-    const {userId, addressId} = req.body;
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {addressId} = req.body;
 
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!addressId) return res.send(response(baseResponse.ADDRESS_ID_EMPTY));
 
     const defaultAddressInfo = await addressService.setDefaultAddress(userId, addressId);

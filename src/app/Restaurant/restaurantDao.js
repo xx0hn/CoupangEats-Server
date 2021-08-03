@@ -20,6 +20,7 @@ async function selectNewRestaurant(connection){
             , a.delTIme as DeliveryTime
             , a.maxDelTIme as MaxDeliveryTime
             , a.createdAt as CreatedDate
+            , case when a.status = 'ACTIVE' then '주문가능' else '주문불가' end as Status
 from Restaurant a
 left join ( select id
                 , restaurantId
@@ -50,6 +51,7 @@ async function selectReviewRestaurant(connection){
             , case when a.cheetaDel = 1 then '치타배달' else '일반배달' end as DeliveryType
             , a.delTIme as DeliveryTime
             , a.maxDelTIme as MaxDeliveryTime
+            , case when a.status = 'ACTIVE' then '주문가능' else '주문불가' end as Status
 from Restaurant a 
 left join ( select id
                     , restaurantId
@@ -87,8 +89,8 @@ async function selectRestaurantByCategoryId(connection, categoryId){
         , case when starGrade is null then 0 else starGrade end as StarGrade
         , case when reviewCount is null then 0 else reviewCount end as ReviewCount
         , case when b.delCost = 0 then '무료배달' else b.delCost end as DeliveryCost
-        , b.delTIme as DeliveryTime
-        , b.maxDelTIme as MaxDeliveryTIme
+        , concat(b.delTIme,'-',b.maxDelTIme,'분') as DeliveryTime
+        , case when a.status = 'ACTIVE' then '주문가능' else '주문불가' end as Status
 from RestaurantCategory a
 left join ( select id
                     , name
@@ -218,6 +220,7 @@ async function getRestaurantMainInfo(connection, restaurantId) {
             , concat(b.delTIme,'-',b.maxDelTIme,'분') as DeliveryTime
             , concat(format(b.delCost,0), '원') as DeliveryCost
             , concat(format(b.minCost,0),'원') as MinimumCost
+            , case when b.status = 'ACTIVE' then '주문가능' else '주문불가' end as Status
 from MenuCategory a
 left join ( select id
                     , name
@@ -280,7 +283,7 @@ left join ( select id
                     , restaurantId
                 from Review ) as b
                 on a.id = b.restaurantId
-where a.id = ?;`;
+where a.id = ? and b.status = 'ACTIVE';`;
     const [someReviewRows] = await connection.query(getSomeReviewQuery, restaurantId);
     return someReviewRows;
 }
@@ -300,7 +303,7 @@ async function selectCheetahDeliveryRestaurant(connection){
     const selectCheetahDeliveryRestaurantQuery=`
     select a.id as id
         , a.name as RestaurantName
-        , case when a.cheetaDel = 1 then '치타배달' end as CheetahDelivery
+        , case when a.cheetaDel = 'CHEETAH' then '치타배달' end as CheetahDelivery
         , case when starGrade is null then 0 else starGrade end as StarGrade
         , case when reviewCount is null then 0 else reviewCount end as ReviewCount
         , case when a.delCost = 0 then '무료배달' else concat(format(a.delCost,0),'원') end as DeliveryCost
@@ -317,7 +320,7 @@ left join ( select restaurantId
                 from Review
                 group by restaurantId) as c
                 on a.id = c.restaurantId
-where a.cheetaDel = 1;`;
+where a.cheetaDel = 'CHEETAH';`;
     const [cheetahRestaurantRows] = await connection.query(selectCheetahDeliveryRestaurantQuery);
     return cheetahRestaurantRows;
 }

@@ -6,10 +6,10 @@ module.exports = function(app) {
     app.get('/app/category', restaurant.viewCategory);
 
     //#3 신규 매장 순 조회 API
-    app.get('/app/restaurant/sort/new', restaurant.sortNewRestaurant);
+    app.get('/app/restaurant/sort/new', restaurant.sortNewRestaurant); //쿼리 스트링으로 묶기
 
     //#4 평점 순 매장 조회 API
-    app.get('/app/restaurant/sort/review', restaurant.sortReviewRestaurant);
+    app.get('/app/restaurant/sort/review', restaurant.sortReviewRestaurant); //쿼리 스트링으로 묶기
 
     //#12  카테고리 검색으로 매장 조회 API
     app.get('/app/category/:categoryId/restaurant', restaurant.categorySearch);
@@ -21,7 +21,7 @@ module.exports = function(app) {
     app.post('/app/restaurant/review', restaurant.addReview);
 
     //#15 매장 리뷰 수정 API
-    app.patch('/app/restaurant/review', restaurant.editReview);
+    app.patch('/app/restaurant/review', restaurant.editReview); //jwt 적용해야됨
 
     //#16 사진 있는 매장 리뷰 상세 조회 API
     app.get('/app/restaurant/:restaurantId/photoReview', restaurant.getReview);

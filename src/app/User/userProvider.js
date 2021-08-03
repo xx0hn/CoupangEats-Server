@@ -31,7 +31,16 @@ exports.retrieveUser = async function (userId) {
   return userResult[0];
 };
 
-//email중복확인
+//매장 중복 확인
+exports.restaurantIdCheck = async function(userId, restaurantId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const restaurantIdCheckResult = await userDao.selectUserRestaurantId(connection,userId, restaurantId);
+  connection.release();
+
+  return restaurantIdCheckResult;
+}
+
+//email 중복확인
 exports.emailCheck = async function (email) {
   const connection = await pool.getConnection(async (conn) => conn);
   const emailCheckResult = await userDao.selectUserEmail(connection, email);
@@ -123,4 +132,12 @@ exports.getCardList = async function(userId){
   const getUserCard = await userDao.selectUserCardList(connection, userId);
   connection.release();
   return getUserCard;
+}
+
+//사용자 카드번호로 사용자 조회
+exports.cardNumCheck = async function(userId, bankId, cardNum){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const userCardNum = await userDao.selectUserCardNum(connection, userId, bankId, cardNum);
+  connection.release();
+  return userCardNum;
 }

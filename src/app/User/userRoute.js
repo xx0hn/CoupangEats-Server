@@ -8,17 +8,17 @@ module.exports = function(app){
 
 
 
-    //#8 즐겨찾기 조회 API
-    app.get('/app/users/:userId/favorites', user.getFavorite);
+    //#8 즐겨찾기 조회 API (jwt 적용 완료)
+    app.get('/app/users/:userId/favorites',jwtMiddleware, user.getFavorite);
 
-    //#9 즐겨찾기 항목 삭제 API
-    app.patch('/app/users/:userId/deleteFavorite', user.removeFavorite);
+    //#9 즐겨찾기 항목 삭제 API (jwt 적용 완료)
+    app.patch('/app/users/:userId/favorites',jwtMiddleware, user.removeFavorite);
 
-    //#10 즐겨찾기 항목 추가 API
-    app.post('/app/users/addFavorite', user.addFavorite);
+    //#10 즐겨찾기 항목 추가 API (jwt 적용 완료)
+    app.post('/app/users/:userId/favorites',jwtMiddleware, user.addFavorite);
 
-    //#11 과거 주문내역 조회 API
-    app.get('/app/users/:userId/pastOrder', user.getPastOrders);
+    //#11 과거 주문내역 조회 API (jwt 적용 완료)
+    app.get('/app/users/:userId/past-orders', jwtMiddleware, user.getPastOrders);
 
     //#17 회원 가입 API
     app.post('/app/signUp', user.signUp);
@@ -30,19 +30,19 @@ module.exports = function(app){
     app.get('/app/search/rank', user.searchRank);
 
     //#23 메뉴 담기 API
-    app.post('/app/users/add/orders', user.addOrders);
+    app.post('/app/users/add/orders', user.addOrders); //삭제
 
     //#24 결제 API
-    app.post('/app/payment', user.payment);
+    app.post('/app/payment', user.payment); //어려우니까 마지막에
 
-    //#25 사용자 카드 조회 API
-    app.get('/app/users/:userId/card', user.getCard);
+    //#25 사용자 카드 조회 API (jwt 적용 완료)
+    app.get('/app/users/:userId/cards',jwtMiddleware, user.getCard);
 
-    //#26 사용자 카드 등록 API
-    app.post('/app/users/card/add', user.postCard);
+    //#26 사용자 카드 등록 API (jwt 적용 완료)
+    app.post('/app/users/:userId/cards',jwtMiddleware, user.postCard);
 
     //#27 사용자 카드 삭제 API
-    app.patch('/app/users/:userId/deleteCard', user.patchCard);
+    app.patch('/app/users/:userId/cards',jwtMiddleware, user.patchCard); //jwt 적용해야됨
 
     //#28 탈퇴하기 API
     // app.patch('/app/signOut', user.signOut)

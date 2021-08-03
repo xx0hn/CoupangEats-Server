@@ -32,6 +32,11 @@ exports.editUser = async function (id, nickname) {
 //즐겨찾기 추가
 exports.addFavoriteList = async function (userId, restaurantId) {
     try{
+        //사용자가 해당 매장을 이미 추가했는지 확인
+        const restaurantRows = await userProvider.restaurantIdCheck(userId, restaurantId);
+        if(restaurantRows.length>0){
+            return errResponse(baseResponse.REDUNDANT_RESTAURANT_ID);
+        }
         const connection = await pool.getConnection(async(conn)=>conn);
         const addFavoriteResList = await userDao.additFavoriteList(connection, userId, restaurantId);
         connection.release();
@@ -42,10 +47,10 @@ exports.addFavoriteList = async function (userId, restaurantId) {
     }
 }
 //즐겨찾기 삭제
-exports.deleteFavorite = async function (favoritesId){
+exports.deleteFavorite = async function (userId, favoritesId){
     try{
         const connection = await pool.getConnection(async(conn)=>conn);
-        const editFavoritesList = await userDao.updateFavoritesList(connection, favoritesId);
+        const editFavoritesList = await userDao.updateFavoritesList(connection,userId, favoritesId);
         connection.release();
 
         return response(baseResponse.SUCCESS);
@@ -67,7 +72,7 @@ exports.makeUser = async function (email, password, name, phoneNum, sex) {
             .createHash("sha512")
             .update(password)
             .digest("hex");
-
+        //전화번호 중복 확인
         const phoneNumRows = await userProvider.phoneNumCheck(phoneNum);
         if(phoneNumRows.length > 0)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_PHONENUM);
@@ -164,6 +169,10 @@ exports.addPayment = async function (cardId, couponId, restaurantId, request){
 //사용자 카드 등록
 exports.postCardList = async function (userId, bankId, cardNum){
     try{
+        const cardNumRows = await userProvider.cardNumCheck(userId, bankId, cardNum);
+        if(cardNumRows.length>0){
+            return errResponse(baseResponse.REDUNDANT_CARD_NUM);
+        }
         const connection = await pool.getConnection(async(conn)=>conn);
         const addCardList = await userDao.postUserCard(connection, userId, bankId, cardNum);
         connection.release();

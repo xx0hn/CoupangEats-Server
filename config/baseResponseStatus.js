@@ -34,6 +34,8 @@ module.exports = {
     USER_INFO_EMPTY : {"isSuccess": false, "code": 2041, "message": "유저 정보를 입력해주세요. "},
 
 
+
+
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
 
     ADDRESS_ID_EMPTY : { "isSuccess": false, "code": 2025, "message": "addressId를 입력해주세요. "},
@@ -62,6 +64,8 @@ module.exports = {
 
     BANK_ID_EMPTY: {"isSuccess": false, "code": 2040, "message": "bankId를 입력해주세요. "},
 
+    LATITUDE_EMPTY: {"isSuccess": false, "code": 2041, "message": "위도를 입력해주세요. "},
+    LONGTITUDE_EMPTY: {"isSuccess": false, "code": 2042, "message": "경도를 입력해주세요. "},
 
 
 
@@ -78,6 +82,11 @@ module.exports = {
 
     SIGNOUT_EMAIL_WRONG : {"isSuccess": false, "code": 3009, "message": "아이디가 잘못 되었습니다. "},
     SIGNOUT_PASSWORD_WRONG : { "isSuccess": false, "code": 3010, "message": "비밀번호가 잘못 되었습니다." },
+
+    REDUNDANT_RESTAURANT_ID : {" isSuccess": false, "code": 3011, "message": "중복된 매장입니다. "},
+    REDUNDANT_CARD_NUM: {"isSuccess": false, "code":3012, "message": "중복된 카드입니다. "},
+    REDUNDANT_ADDRESS: {"isSuccess": false, "code":3013, "message": "중복된 주소입니다. "},
+
 
 
     //Connection, Transaction 등의 서버 오류

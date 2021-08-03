@@ -60,24 +60,34 @@ exports.check = async function (req, res) {
  * [GET] /app/users/{userId}/favorites
  */
 exports.getFavorite = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
-    const getFavoritesByUserId = await userProvider.getFavoritesList(userId);
-    return res.send(response(baseResponse.SUCCESS, getFavoritesByUserId));
+    if(userIdFromJWT != userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
+    else {
+        const getFavoritesByUserId = await userProvider.getFavoritesList(userId);
+        return res.send(response(baseResponse.SUCCESS, getFavoritesByUserId));
+    }
 }
 /**
  * API No. 9
  * API Name : 즐겨찾기 항목 삭제 API
- * [PATCH] /app/users/{userId}/deleteFavorite
+ * [PATCH] /app/users/{userId}/favorites
  */
 exports.removeFavorite = async function(req, res) {
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     const favorites = req.body;
     if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!favorites) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
     else {
         for(let i=0; i<favorites.length; i++){
-            const deleteFavorite = await userService.deleteFavorite(favorites[i].favorites);
+            const deleteFavorite = await userService.deleteFavorite(userId, favorites[i].favorites);
         }
     }
     return res.send(response(baseResponse.SUCCESS));
@@ -85,11 +95,16 @@ exports.removeFavorite = async function(req, res) {
 /**
  * API No. 10
  * API Name : 즐겨찾기 항목 추가 API
- * [POST] /app/users/favorites/edit
+ * [POST] /app/users/{userId}/favorites
  */
 exports.addFavorite = async function(req, res){
-    const {userId, restaurantId} = req.body;
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {restaurantId} = req.body;
     if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT != userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!restaurantId) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
 
     const addFavoriteRestaurant = await userService.addFavoriteList(userId, restaurantId);
@@ -99,11 +114,15 @@ exports.addFavorite = async function(req, res){
 /**
  * API No. 11
  * API Name : 과거 주문내역 조회 API
- * [GET] /app/users/{userId}/pastorder
+ * [GET] /app/users/{userId}/past-order
  */
 exports.getPastOrders = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     const orderInfo = await userProvider.getOrdersInfo(userId);
     const result = [];
     for (let i = 0; i < orderInfo.length; i++) {
@@ -188,7 +207,7 @@ exports.searchRank = async function(req, res){
 /**
  * API No. 23
  * API Name : 메뉴 담기 API
- * [POST] /app/users/:userId/addOrders
+ * [POST] /app/users/{userId}/addOrders
  */
 exports.addOrders = async function(req, res){
     const {userId, restaurantId, menuId, menuCount} = req.body;
@@ -216,11 +235,15 @@ exports.payment = async function(req, res){
 /**
  * API No. 25
  * API Name : 사용자 카드 조회 API
- * [GET] /app/user/:userId/card
+ * [GET] /app/user/{userId}/cards
  */
 exports.getCard = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     const getCardList = await userProvider.getCardList(userId);
     return res.send(response(baseResponse.SUCCESS, getCardList));
 }
@@ -228,11 +251,16 @@ exports.getCard = async function(req, res){
 /**
  * API No. 26
  * API Name : 사용자 카드 등록 API
- * [POST] /app/users/card/add
+ * [POST] /app/users/{userId}/cards
  */
 exports.postCard = async function(req, res){
-    const {userId, bankId, cardNum} = req.body;
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {bankId, cardNum} = req.body;
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!bankId) return res.send(response(baseResponse.BANK_ID_EMPTY));
     if(!cardNum) return res.send(response(baseResponse.CARD_NUM_EMPTY));
     const postCardList = await userService.postCardList(userId, bankId, cardNum);
@@ -242,12 +270,16 @@ exports.postCard = async function(req, res){
 /**
  * API No. 27
  * API Name : 사용자 카드 삭제 API
- * [PATCH] /app/users/:userId/deleteCard
+ * [PATCH] /app/users/{userId}/cards
  */
 exports.patchCard = async function (req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     const cardId = req.body;
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!cardId) return res.send(response(baseResponse.CARD_ID_EMPTY));
     else {
         for(let i=0; i<cardId.length; i++){

@@ -7,6 +7,15 @@ async function selectUser(connection) {
   const [userRows] = await connection.query(selectUserListQuery);
   return userRows;
 }
+//매장id로 회원 조회
+async function selectUserRestaurantId(connection,userId, restaurantId){
+  const selectUserRestaurantIdQuery=`
+                SELECT restaurantId, userId 
+                FROM Favorites
+                WHERE userId = ? and restaurantId = ?;`;
+  const [userRestaurantRows] = await connection.query(selectUserRestaurantIdQuery,[userId, restaurantId]);
+  return userRestaurantRows;
+}
 
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
@@ -90,13 +99,7 @@ async function updateUserInfo(connection, id, nickname) {
   const updateUserRow = await connection.query(updateUserQuery, [nickname, id]);
   return updateUserRow[0];
 }
-async function selectUser1(connection) {
-  const selectUserListQuery1 = `
-        select id, name, email, phoneNum
-        from User;`;
-  const [userRows1] = await connection.query(selectUserListQuery1);
-  return userRows1;
-}
+
 
 //유저 즐겨찾기 목록 조회
 async function selectFavoritesList(connection, userId) {
@@ -159,7 +162,7 @@ left join ( select restaurantId
                 from RestaurantImageUrl
                 group by restaurantId ) as h
                 on a.restaurantId = h.restaurantId
-where a.userId= ? and a.status = 0
+where a.userId= ? and a.status = 'ACTIVE'
 group by a.restaurantId
 order by orderCount desc;`;
   const [userFavoritesRows] = await connection.query(selectUsersFavoritesResultQuery, userId);
@@ -167,12 +170,12 @@ order by orderCount desc;`;
 }
 
 //즐겨찾기 항목 삭제
-async function updateFavoritesList(connection, favoritesId){
+async function updateFavoritesList(connection,userId, favoritesId){
   const updateFavoritesListQuery =`
   update Favorites
-set status = 2
-where id = ?;`;
-  const [existFavoritesRows] = await connection.query(updateFavoritesListQuery, [favoritesId]);
+set status = 'DELETED'
+where userId = ? and id = ?;`;
+  const [existFavoritesRows] = await connection.query(updateFavoritesListQuery,[userId, favoritesId]);
   return existFavoritesRows;
 }
 
@@ -196,7 +199,7 @@ async function getOrdersInfo(connection, userId) {
          , date_format(a.createdAt, "%y-%m-%d") as OrderDate
          , case when date_format(a.createdAt, "%H") > 12 then '오후' else '오전' end as Noon
          , case when date_format(a.createdAt, "%H") > 12 then +date_format(a.createdAt, "%h:%i") else +date_format(a.createdAt, "%h:%i") end as 'Time'
-        , case when a.status = 0 then '배달완료' else '배달취소' end as 'Status'
+        , case when a.status = 'ACTIVE' then '배달완료' else '배달취소' end as 'Status'
          , case when (6371*acos(cos(radians(e.latitude))*cos(radians(h.latitude))*cos(radians(h.longtitude)-radians(e.longtitude))+sin(radians(e.latitude))*sin(radians(h.latitude)))) > 350 then '주문불가' else '주문가능' end as Available
     from Charge a
            left join ( select id
@@ -337,7 +340,7 @@ left join ( select id
                     , name
                 from Bank ) as b
                 on a.bankId = b.id
-where a.userId = ? and a.status = 0;`;
+where a.userId = ? and a.status = 'ACTIVE';`;
   const [userCardsRows] = await connection.query(selectUserCardListQuery, userId);
   return userCardsRows;
 }
@@ -355,10 +358,20 @@ async function postUserCard(connection, userId, bankId, cardNum){
 async function patchUserCard(connection, cardId){
   const patchUserCardQuery=`
     update Card
-    set status = 2
+    set status = 'DELETED'
     where id = ?;`;
   const [patchCardRows] = await connection.query(patchUserCardQuery, [cardId]);
   return patchCardRows;
+}
+
+//카드 번호로 사용자 조회
+async function selectUserCardNum(connection, userId, bankId, cardNum){
+  const selectUserCardNumQuery=`
+                SELECT cardNum, userId 
+                FROM Card
+                WHERE userId = ? and bankId = ? and cardNum = ?;`;
+  const [userCardNumRows] = await connection.query(selectUserCardNumQuery, [userId, bankId, cardNum]);
+  return userCardNumRows;
 }
 
 // //사용자 회원 탈퇴
@@ -372,6 +385,7 @@ async function patchUserCard(connection, cardId){
 // }
 module.exports = {
   selectUser,
+  selectUserRestaurantId,
   selectUserEmail,
   selectUserPhoneNum,
   selectUserId,
@@ -391,5 +405,6 @@ module.exports = {
   selectUserCardList,
   postUserCard,
   patchUserCard,
+  selectUserCardNum,
   // signOutUser
 };
