@@ -1,3 +1,66 @@
+//유저가 작성한 리뷰 조회
+async function selectUserReviews(connection, userId, restaurantId){
+  const selectUserReviewQuery=`
+  select a.id as id
+        , b.id as RestaurantId
+        , b.name as RestaurantName
+        , a.score as StarGrade
+        , a.imageUrl as ReviewImage
+        , a.contents as ReviewComment
+        , date_format(a.createdAt, "%Y-%m-%d") as CreatedDate
+        , helpedCount as ReviewHelpedCount
+from Review a
+left join ( select id
+                    , name
+                from Restaurant ) as b
+                on a.restaurantId = b.id
+left join ( select id
+                    , userId
+                    , reviewId
+                    , count(case when status ='ACTIVE' and reviewId is not null then 1 end ) as 'helpedCount'
+                from Helped
+                group by reviewId) as c 
+                on a.id = c.reviewId
+where a.userId = ? and a.restaurantId = ? ;`;
+  const [selectUserReviewRows] = await connection.query(selectUserReviewQuery, [userId, restaurantId]);
+  return selectUserReviewRows;
+}
+
+//리뷰의 메뉴 조회
+async function selectMenuInfo(connection, userId, reviewId){
+  const selectMenuInfoQuery=`
+  select e.id as MenuId
+        , e.name as MenuName
+        , c.menuCount as MenuCount
+from Menu a
+left join ( select id
+                    , chargeId
+                    , userId
+                    , restaurantId
+                from Review ) as b
+                on a.restaurantId = b.restaurantId
+left join ( select id
+                    , userId
+                    , restaurantId
+                    , chargeId
+                    , menuId
+                    , menuCount
+                from Orders ) as c
+                on b.chargeId = c.chargeId
+left join ( select id
+                    , restaurantId
+                from Charge ) as d
+                on b.chargeId = d.id
+left join ( select id
+                    , name
+                from Menu ) as e
+                on c.menuId = e.id
+where b.userId = ? and b.id = ?
+group by e.id;`;
+  const [menuInfoRows] = await connection.query(selectMenuInfoQuery, [userId, reviewId]);
+  return menuInfoRows;
+}
+
 // 모든 유저 조회
 async function selectUser(connection) {
   const selectUserListQuery = `
@@ -64,9 +127,9 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 // 패스워드 체크
 async function selectUserPassword(connection, selectUserPasswordParams) {
   const selectUserPasswordQuery = `
-    select email
-         , name
-         , password
+    select email as email
+         , name as name
+         , password as password
     from User
     where email = ?
       and password = ?;`;
@@ -384,6 +447,8 @@ async function selectUserCardNum(connection, userId, bankId, cardNum){
 //   return signOutRows;
 // }
 module.exports = {
+  selectUserReviews,
+  selectMenuInfo,
   selectUser,
   selectUserRestaurantId,
   selectUserEmail,

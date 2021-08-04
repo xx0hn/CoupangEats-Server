@@ -4,6 +4,23 @@ const { logger } = require("../../../config/winston");
 const userDao = require("./userDao");
 
 // Provider: Read 비즈니스 로직 처리
+
+//유저가 작성한 리뷰 조회
+exports.getUserReview = async function (userId, restaurantId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const getUserReviewResult = await userDao.selectUserReviews(connection, userId, restaurantId);
+  connection.release();
+  return getUserReviewResult;
+}
+
+//리뷰의 메뉴 조회
+exports.getMenuInfo = async function (userId, reviewId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const getMenuInfo = await userDao.selectMenuInfo(connection, userId, reviewId);
+  connection.release();
+  return getMenuInfo;
+}
+
 //email로 유저 조회
 exports.retrieveUserList = async function (email) {
   if (!email) {

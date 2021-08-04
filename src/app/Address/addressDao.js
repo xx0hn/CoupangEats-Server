@@ -51,8 +51,6 @@ where userId = ? and id = ?;`
     return defaultAddressRows;
 }
 
-//배송지 정보로 유저 조회
-
 module.exports = {
     selectAddress,
     rmAddressInfo,

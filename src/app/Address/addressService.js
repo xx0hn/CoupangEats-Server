@@ -49,7 +49,7 @@ exports.setDefaultAddress = async function(userId, addressId) {
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
-        logger.error(`App - defaultAddress Service error\n: ${err.message}`);
+        logger.error(`App - defaultAddress Service Transaction error\n: ${err.message}`);
         await connection.rollback();
         return errResponse(baseResponse.DB_ERROR);
     }

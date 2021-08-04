@@ -6,7 +6,8 @@ module.exports = function(app){
     // 회원 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
     app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers)
 
-
+    //#2 유저가 작성한 리뷰 조회 API
+    app.get('/app/users/:userId/reviews', jwtMiddleware, user.getUserReview);
 
     //#8 즐겨찾기 조회 API (jwt 적용 완료)
     app.get('/app/users/:userId/favorites',jwtMiddleware, user.getFavorite);
@@ -24,10 +25,10 @@ module.exports = function(app){
     app.post('/app/signUp', user.signUp);
 
     //#18 로그인 API
-    app.post('/app/signIn', user.signIn);
+    app.post('/app/signIn', user.signIn); //로그인 고쳐보기
 
     //#20 검색 순위 조회 API
-    app.get('/app/search/rank', user.searchRank);
+    app.get('/app/searchwords/rank', user.searchRank);
 
     //#23 메뉴 담기 API
     app.post('/app/users/add/orders', user.addOrders); //삭제

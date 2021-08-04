@@ -10,7 +10,7 @@ module.exports = {
 
     //Request error
     SIGNUP_EMAIL_EMPTY : { "isSuccess": false, "code": 2001, "message":"이메일을 입력해주세요" },
-    SIGNUP_EMAIL_LENGTH : { "isSuccess": false, "code": 2002, "message":"이메일은 3자리 미만으로 입력해주세요." },
+    SIGNUP_EMAIL_LENGTH : { "isSuccess": false, "code": 2002, "message":"이메일은 30자리 미만으로 입력해주세요." },
     SIGNUP_EMAIL_ERROR_TYPE : { "isSuccess": false, "code": 2003, "message":"이메일을 형식을 정확하게 입력해주세요." },
     SIGNUP_PASSWORD_EMPTY : { "isSuccess": false, "code": 2004, "message": "비밀번호를 입력 해주세요." },
     SIGNUP_PASSWORD_LENGTH : { "isSuccess": false, "code": 2005, "message":"비밀번호는 4~20자리를 입력해주세요." },
@@ -67,6 +67,10 @@ module.exports = {
     LATITUDE_EMPTY: {"isSuccess": false, "code": 2041, "message": "위도를 입력해주세요. "},
     LONGTITUDE_EMPTY: {"isSuccess": false, "code": 2042, "message": "경도를 입력해주세요. "},
 
+    PRIORITY_EMPTY:{"isSuccess": false, "code": 2043, "message": "정렬 우선순위를 입력해주세요. "},
+    PRIORITY_ERROR_TYPE: {"isSuccess": false, "code": 2044, "message": "정렬 우선순위를 정확하게 입력해주세요. (NEW, STARGRADE, ORDERCOUNT) "},
+
+    SEARCH_WORD_EMPTY: {"isSuccess": false, "code": 2045, "message": "검색어를 입력해주세요. "},
 
 
     // Response error
@@ -86,9 +90,10 @@ module.exports = {
     REDUNDANT_RESTAURANT_ID : {" isSuccess": false, "code": 3011, "message": "중복된 매장입니다. "},
     REDUNDANT_CARD_NUM: {"isSuccess": false, "code":3012, "message": "중복된 카드입니다. "},
     REDUNDANT_ADDRESS: {"isSuccess": false, "code":3013, "message": "중복된 주소입니다. "},
+    REDUNDANT_USERID_REVIEWID:{"isSuccess": false, "code":3014, "message": "이미 도움 버튼이 눌려있습니다.  "},
+    REDUNDANT_CHARGE_ID_REVIEW:{"isSuccess": false, "code":3015, "message": "이미 리뷰가 작성되었습니다.  "},
 
-
-
+    CANNOT_UPDATE_REVIEW:{"isSuccess": false, "code":3016, "message": "수정 가능 기간이 아닙니다. "},
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},
     SERVER_ERROR : { "isSuccess": false, "code": 4001, "message": "서버 에러"},

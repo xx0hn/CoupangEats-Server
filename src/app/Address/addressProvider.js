@@ -11,4 +11,3 @@ exports.retrieveAddress = async function(userId){
 
     return addressResult;
 }
-

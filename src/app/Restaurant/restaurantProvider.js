@@ -3,34 +3,35 @@ const { logger } = require("../../../config/winston");
 
 const restaurantDao = require("./restaurantDao");
 
-//전체 카테고리 조회
-exports.totalCategory = async function(){
+//신규 순 매장 조회
+exports.sortNewRestaurant = async function(){
     const connection = await pool.getConnection(async(conn)=>conn);
-    const categoryResult = await restaurantDao.selectCategory(connection);
+    const sortNewRestaurantResult = await restaurantDao.sortNewRestaurant(connection);
     connection.release();
-    return categoryResult;
+    return sortNewRestaurantResult;
 }
 
-//신규 매장 조회
-exports.newRestaurant = async function(){
+//별점 순 매장 조회
+exports.sortStarGradeRestaurant = async function(){
     const connection = await pool.getConnection(async(conn)=>conn);
-    const newRestaurantResult = await restaurantDao.selectNewRestaurant(connection);
+    const sortStarGradeRestaurantResult = await restaurantDao.sortStarGradeRestaurant(connection);
     connection.release();
-    return newRestaurantResult;
+    return sortStarGradeRestaurantResult;
 }
 
-//평점 순 매장 조회
-exports.reviewRestaurant = async function(){
+//주문 많은 순 매장 조회
+exports.sortOrderCountRestaurant = async function(){
     const connection = await pool.getConnection(async(conn)=>conn);
-    const reviewRestaurantResult = await restaurantDao.selectReviewRestaurant(connection);
+    const sortOrderCountRestaurantResult = await restaurantDao.sortOrderCountRestaurant(connection);
     connection.release();
-    return reviewRestaurantResult;
+    return sortOrderCountRestaurantResult;
 }
 
-//카테고리로 매장 조회
-exports.restaurantByCategoryId = async function(categoryId){
+
+//검색어로 매장 조회
+exports.restaurantByCategoryId = async function(word, words){
     const connection = await pool.getConnection(async(conn)=>conn);
-    const restaurantByCategoryResult = await restaurantDao.selectRestaurantByCategoryId(connection, categoryId);
+    const restaurantByCategoryResult = await restaurantDao.selectRestaurantByCategoryId(connection, word, words);
     connection.release();
     return restaurantByCategoryResult;
 }
@@ -123,4 +124,32 @@ exports.getOrderedMenu = async function(chargeId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const nonPhotoReviewMenu = await restaurantDao.selectNonPhotoReviewMenu(connection, chargeId);
     return nonPhotoReviewMenu;
+}
+
+//reviewId를 통한 유저 조회
+exports.reviewIdCheck = async function(userId, reviewId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const reviewIdCheck = await restaurantDao.selectUserByReviewId(connection, userId, reviewId);
+    return reviewIdCheck;
+}
+
+//chargeId를 통한 리뷰 조회
+exports.reviewCheck = async function(chargeId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const reviewResult = await restaurantDao.selectReviewByChargeId(connection, chargeId);
+    return reviewResult;
+}
+
+//도움됐어요의 상태 확인
+exports.helpedStatusCheck = async function(userId, reviewId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const helpedStatusResult = await restaurantDao.selectHelpedStatus(connection, userId, reviewId);
+    return helpedStatusResult;
+}
+
+//수정 가능 기간 확인
+exports.availablePeriodCheck = async function(userId, reviewId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const PeriodCheck = await restaurantDao.selectReviewByPeriod(connection, userId, reviewId);
+    return PeriodCheck;
 }

@@ -113,9 +113,9 @@ exports.postUserSignIn = async function (email, password) {
         }
         // 계정 상태 확인
         const userInfoRows = await userProvider.accountCheck(email);
-        if (userInfoRows[0].status === 1) {
+        if (userInfoRows[0].status === 'INACTIVE') {
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
-        } else if (userInfoRows[0].status === 2) {
+        } else if (userInfoRows[0].status === 'DELETED') {
             return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
         }
 

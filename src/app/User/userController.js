@@ -49,7 +49,29 @@ exports.check = async function (req, res) {
     return res.send(response(baseResponse.TOKEN_VERIFICATION_SUCCESS));
 };
 
+/**
+ * API No. 2
+ * API Name : 유저가 작성한 리뷰 조회 API
+ * [GET] /app/users/{userId}/review
+ */
+exports.getUserReview = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {restaurantId} = req.body;
+    const result = [];
+    if(!userId) return res.send(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT != userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
+    if(!restaurantId) return res.send(baseResponse.RESTAURANT_ID_EMPTY);
 
+    const getUserReview = await userProvider.getUserReview(userId, restaurantId);
+    for(let i=0; i<getUserReview.length; i++){
+        const getMenuInfo = await userProvider.getMenuInfo(userId, getUserReview[i].id);
+        result.push({ReviewInfo: getUserReview[i], MenuInfo: getMenuInfo});
+    }
+    return res.send(response(baseResponse.SUCCESS, result));
+}
 
 
 
@@ -143,7 +165,7 @@ exports.signUp = async function (req, res) {
     //이메일 확인
     if(!email)
         return res.send(response(baseResponse.SIGNIN_EMAIL_EMPTY));
-    if(email.length > 45)
+    if(email.length > 30)
         return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
     if(!regexEmail.test(email))
         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
@@ -197,7 +219,7 @@ exports.signIn = async function (req, res) {
 /**
  * API No. 20
  * API Name : 검색 순위 조회 API
- * [POST] /app/users/search/rank
+ * [GET] /app/searchwords/rank
  */
 exports.searchRank = async function(req, res){
     const searchRanking = await userProvider.searchRankInfo();

@@ -7,96 +7,141 @@ const {response, errResponse} = require("../../../config/response");
 const regexEmail = require('regex-email');
 const { emit } = require('nodemon');
 
-/**
- * API No. 2
- * API Name : 카테고리 조회 API
- * [GET] /app/category
- */
-exports.viewCategory = async function(req,res) {
-    const getCategory = await restaurantProvider.totalCategory();
-    return res.send(response(baseResponse.SUCCESS, getCategory));
-}
+
+
 
 /**
  * API No. 3
- * API Name : 신규 매장 순 조회 API
- * [GET] /app/restaurant/sort/new
+ * API Name : 매장 우선순위 정렬 조회 API
+ * [GET] /app/restaurants
  */
-exports.sortNewRestaurant = async function(req, res) {
-    const getNewRestaurant = await restaurantProvider.newRestaurant();
-    return res.send(response(baseResponse.SUCCESS, getNewRestaurant));
+exports.sortRestaurant = async function(req, res){
+    const {priority} = req.query;
+    const result = [];
+    if(!priority) return res.response(baseResponse.PRIORITY_EMPTY);
+    if(priority==='NEW'){
+        const sortNewRestaurant = await restaurantProvider.sortNewRestaurant();
+        for(let i=0; i<sortNewRestaurant.length; i++){
+            const restaurantImageUrl = await restaurantProvider.getRestaurantImageUrl(sortNewRestaurant[i].id);
+            result.push({RestaurantInfo: sortNewRestaurant[i], RestaurantImageUrl: restaurantImageUrl});
+        }
+        return res.send(response(baseResponse.SUCCESS, result));
+    }
+    else if(priority==='STARGRADE'){
+        const sortStarGradeRestaurant = await restaurantProvider.sortStarGradeRestaurant();
+        for(let i=0; i<sortStarGradeRestaurant.length; i++){
+            const restaurantImageUrl = await restaurantProvider.getRestaurantImageUrl(sortStarGradeRestaurant[i].id);
+            result.push({RestaurantInfo: sortStarGradeRestaurant[i], RestaurantImageUrl: restaurantImageUrl});
+        }
+        return res.send(response(baseResponse.SUCCESS, result));
+    }
+    else if(priority==='ORDERCOUNT'){
+        const sortOrderCountRestaurant = await restaurantProvider.sortOrderCountRestaurant();
+        for(let i=0; i<sortOrderCountRestaurant.length; i++){
+            const restaurantImageUrl = await restaurantProvider.getRestaurantImageUrl(sortOrderCountRestaurant[i].id);
+            result.push({RestaurantInfo: sortOrderCountRestaurant[i], RestaurantImageUrl: restaurantImageUrl});
+        }
+        return res.send(response(baseResponse.SUCCESS, result));
+    }
+    else {
+        return res.send(response(baseResponse.PRIORITY_ERROR_TYPE));
+    }
 }
 
 /**
  * API No. 4
- * API Name : 평점 순 매장 조회 API
- * [GET] /app/restaurant/sort/review
+ * API Name : 매장 우선순위 정렬 조회 API
+ * [PATCH] /app/users/{userId}/helped-review
  */
-exports.sortReviewRestaurant = async function(req, res) {
-    const getReviewRestaurant = await restaurantProvider.reviewRestaurant();
-    return res.send(response(baseResponse.SUCCESS, getReviewRestaurant));
+exports.cancelHelped = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {reviewId} = req.body;
+    if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
+    if(!reviewId) return res.response(baseResponse.REVIEW_ID_EMPTY);
+    const cancelHelped = await restaurantService.cancelHelped(userId, reviewId);
+    return res.send(response(cancelHelped));
 }
+
+
 /**
  * API No. 12
  * API Name : 매장 검색 API
- * [GET] /app/restaurant/category/:categoryId
+ * [GET] /app/search-words
  */
 exports.categorySearch = async function (req, res) {
-    const categoryId = req.params.categoryId;
-    if(!categoryId) return res.response(baseResponse.CATEGORY_ID_EMPTY);
-    const getRestaurantByCategoryId = await restaurantProvider.restaurantByCategoryId(categoryId);
-    return res.send(response(baseResponse.SUCCESS, getRestaurantByCategoryId));
+    const {word} = req.query;
+    const words = word;
+    const result = [];
+    const getRestaurantByCategoryId = await restaurantProvider.restaurantByCategoryId(word, words);
+    if(!word) return res.response(baseResponse.SEARCH_WORD_EMPTY);
+    for(let i=0; i<getRestaurantByCategoryId.length; i++){
+        const restaurantImageUrl = await restaurantProvider.getRestaurantImageUrl(getRestaurantByCategoryId[i].RestaurantId);
+        result.push({RestaurantInfo: getRestaurantByCategoryId[i], RestaurantImageUrl: restaurantImageUrl});
+    }
+    return res.send(response(baseResponse.SUCCESS, result));
 }
 /**
  * API No. 13
  * API Name : 리뷰 도움 여부 증가 API
- * [PATCH] /app/restaurant/review/help
+ * [POST] /app/users/{userId}/helped-review
  */
 exports.giveHelpReview = async function (req,res) {
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
     const {reviewId} = req.body;
+    if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!reviewId) return res.response(baseResponse.REVIEW_ID_EMPTY);
-    const updateReviewHelp = await restaurantService.patchReviewHelp(reviewId);
+    const updateReviewHelp = await restaurantService.patchReviewHelp(userId, reviewId);
     return res.send(response(updateReviewHelp));
 }
 /**
  * API No. 14
  * API Name : 매장 리뷰 생성 API
- *[POST] /app/restaurant/review
+ *[POST] /app/users/{userId}/reviews
  */
 exports.addReview = async function (req, res) {
-    const {userId, chargeId, restaurantId, reviewScore, contents, imageUrl} =req.body;
+    const userIdFromJTW = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {chargeId, restaurantId, reviewScore, contents, imageUrl} =req.body;
 
     if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
-
+    if(userIdFromJTW!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!chargeId) return res.response(baseResponse.CHARGE_ID_EMPTY);
-
     if(!restaurantId) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
-
     if(!reviewScore) return res.response(baseResponse.REVIEW_SCORE_EMPTY);
     if(reviewScore>5||reviewScore<1) return res.response(baseResponse.REVIEW_SCORE_SIZE);
-
     if(!contents) return res.response(baseResponse.REVIEW_CONTENTS_EMPTY);
-
     const postReview = await restaurantService.postRestaurantReview(userId, chargeId, restaurantId, reviewScore, contents, imageUrl);
     return res.send(response(postReview));
 }
 /**
  * API No. 15
  * API Name : 매장 리뷰 수정 API
- *[PATCH] /app/restaurant/review
+ *[PATCH] /app/users/{userId}/reviews
  */
 exports.editReview = async function(req, res){
-
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId =req.params.userId;
     const {reviewScore, contents, imageUrl, reviewId} = req.body;
-
+    if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
     if(!reviewId) return res.response(baseResponse.REVIEW_ID_EMPTY);
-
     if(!reviewScore) return res.response(baseResponse.REVIEW_SCORE_EMPTY);
     if(reviewScore>5||reviewScore<1) return res.response(baseResponse.REVIEW_SCORE_SIZE);
-
     if(!contents) return res.response(baseResponse.REVIEW_CONTENTS_EMPTY);
 
-    const editRestaurantReview = await restaurantService.updateReview( reviewScore, contents, imageUrl, reviewId);
+    const editRestaurantReview = await restaurantService.updateReview(userId, reviewScore, contents, imageUrl, reviewId);
     return res.send(response(editRestaurantReview));
 }
 /**

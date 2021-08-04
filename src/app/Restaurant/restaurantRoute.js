@@ -2,36 +2,33 @@ module.exports = function(app) {
     const restaurant = require('./restaurantController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
-    //#2 카테고리 조회 API
-    app.get('/app/category', restaurant.viewCategory);
+    //#3 매장 우선순위 정렬 조회 API
+    app.get('/app/restaurants', restaurant.sortRestaurant);
 
-    //#3 신규 매장 순 조회 API
-    app.get('/app/restaurant/sort/new', restaurant.sortNewRestaurant); //쿼리 스트링으로 묶기
+    //#4 리뷰 도움 여부 취소 API (jwt 적용 완료)
+    app.patch('/app/users/:userId/helped-review', jwtMiddleware, restaurant.cancelHelped);
 
-    //#4 평점 순 매장 조회 API
-    app.get('/app/restaurant/sort/review', restaurant.sortReviewRestaurant); //쿼리 스트링으로 묶기
+    //#12  검색으로 매장 조회 API
+    app.get('/app/searchwords', restaurant.categorySearch);
 
-    //#12  카테고리 검색으로 매장 조회 API
-    app.get('/app/category/:categoryId/restaurant', restaurant.categorySearch);
+    //#13 매장 리뷰 도움 여부 증가 API (jwt, transaction 적용 완료)
+    app.post('/app/users/:userId/helped-review',jwtMiddleware, restaurant.giveHelpReview);
 
-    //#13 매장 리뷰 도움 여부 증가 API
-    app.patch('/app/restaurant/review/help', restaurant.giveHelpReview);
-
-    //#14 매장 리뷰 생성 API
-    app.post('/app/restaurant/review', restaurant.addReview);
+    //#14 매장 리뷰 생성 API (jwt 적용 완료)
+    app.post('/app/users/:userId/reviews',jwtMiddleware, restaurant.addReview);
 
     //#15 매장 리뷰 수정 API
-    app.patch('/app/restaurant/review', restaurant.editReview); //jwt 적용해야됨
+    app.patch('/app/users/:userId/reviews',jwtMiddleware, restaurant.editReview); //jwt 적용해야됨
 
     //#16 사진 있는 매장 리뷰 상세 조회 API
-    app.get('/app/restaurant/:restaurantId/photoReview', restaurant.getReview);
+    app.get('/app/restaurants/:restaurantId/photoReview', restaurant.getReview); //쿼리 스트링
 
     //#19 매장 메인 화면 조회 API
-    app.get('/app/restaurant/:restaurantId/main', restaurant.restaurantMain);
+    app.get('/app/restaurants/:restaurantId/main', restaurant.restaurantMain);
 
     //#21 치타배달 매장 조회 API
-    app.get('/app/restaurant/cheetah', restaurant.cheetahRestaurant);
+    app.get('/app/restaurants/cheetah', restaurant.cheetahRestaurant);
 
     //#22 사진 없는 매장 리뷰 조회 API
-    app.get('/app/restaurant/:restaurantId/review', restaurant.reviewGet);
+    app.get('/app/restaurants/:restaurantId/review', restaurant.reviewGet); //쿼리 스트링
 };
