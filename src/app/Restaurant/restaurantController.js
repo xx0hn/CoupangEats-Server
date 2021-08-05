@@ -146,20 +146,37 @@ exports.editReview = async function(req, res){
 }
 /**
  * API No. 16
- * API Name : 사진 있는 매장 리뷰 상세 조회 API
- *[GET] /app/restaurant/:restaurantId/photoReview
+ * API Name : 매장 리뷰 상세 조회 API
+ *[GET] /app/restaurant/:restaurantId/reviews
  */
 exports.getReview = async function (req, res){
     const restaurantId = req.params.restaurantId;
-    const reviewsInfo = await restaurantProvider.getReviews(restaurantId);
-    console.log(reviewsInfo)
-    const result= [];
+    const {type} = req.query;
     if(!restaurantId) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
-    for(let i=0; i<reviewsInfo.length; i++){
-        const orderFoods = await restaurantProvider.getOrdersFood(restaurantId, reviewsInfo[i].id);
-        result.push({reviewsInfo: reviewsInfo[i], orderFoods: orderFoods});
+    if(!type) return res.response(baseResponse.REVIEW_TYPE_EMPTY);
+    if(type==='PHOTO') {
+        const reviewsInfo = await restaurantProvider.getReviews(restaurantId);
+        const result= [];
+        for (let i = 0; i < reviewsInfo.length; i++) {
+            const orderFoods = await restaurantProvider.getOrdersFood(restaurantId, reviewsInfo[i].id);
+            result.push({reviewsInfo: reviewsInfo[i], orderFoods: orderFoods});
+        }
+        return res.send(response(baseResponse.SUCCESS, result));
     }
-    return res.send(response(baseResponse.SUCCESS, result));
+    else if(type==='NON-PHOTO'){
+        const getNonPhotoReview = await restaurantProvider.getNonPhotoReview(restaurantId);
+        const getReviews = await restaurantProvider.getNonReviews(restaurantId);
+        const result = [];
+        for(let i=0; i<getReviews.length; i++){
+            const getOrderedMenu = await restaurantProvider.getOrderedMenu(getReviews[i].id);
+            result.push({reviewsInfo: getReviews[i], orderFoods: getOrderedMenu});
+        }
+        getNonPhotoReview.push(result);
+        return res.send(response(baseResponse.SUCCESS, getNonPhotoReview));
+    }
+    else{
+        return res.send(response(baseResponse.REVIEW_TYPE_NOT_MATCH));
+    }
 }
 
 /**
@@ -187,33 +204,65 @@ exports.restaurantMain = async function(req, res){
 
 /**
  * API No. 21
- * API Name : 치타배달 매장 조회 API
+ * API Name : 배달 유형 별 매장 조회 API
  *[GET] /app/restaurant/cheetah
  */
 exports.cheetahRestaurant = async function(req, res){
-    const cheetahDeliveryRes = await restaurantProvider.cheetahDeliveryRestaurant();
-    const result = [];
-    for(let i =0; i<cheetahDeliveryRes.length; i++){
-        const cheetahResImage = await restaurantProvider.getCheetahResImageUrl(cheetahDeliveryRes[i].id);
-        result.push({restaurantInfo: cheetahDeliveryRes[i], restaurantImageUrl: cheetahResImage});
+    const {deliveryType} = req.query;
+    const result=[];
+    if(!deliveryType) return res.send(baseResponse.DELIVERY_TYPE_EMPTY);
+    if(deliveryType==='CHEETAH') {
+        const cheetahDeliveryRes = await restaurantProvider.cheetahDeliveryRestaurant();
+        for (let i = 0; i < cheetahDeliveryRes.length; i++) {
+            const cheetahResImage = await restaurantProvider.getCheetahResImageUrl(cheetahDeliveryRes[i].id);
+            result.push({restaurantInfo: cheetahDeliveryRes[i], restaurantImageUrl: cheetahResImage});
+        }
+        return res.send(response(baseResponse.SUCCESS, result));
     }
-    return res.send(response(baseResponse.SUCCESS, result));
+    else if(deliveryType==='ALL'){
+        const deliveryRes = await restaurantProvider.deliveryRestaurant();
+        for(let i=0; i<deliveryRes.length; i++){
+            const resImage = await restaurantProvider.getCheetahResImageUrl(deliveryRes[i].id);
+            result.push({restaurantInfo: deliveryRes[i], restaurantImageUrl: resImage});
+        }
+        return res.send(response(baseResponse.SUCCESS, result));
+    }
+    else return res.send(response(baseResponse.DELIVERY_TYPE_NOT_MATCH));
+}
+
+
+/**
+ * API No. 23
+ * API Name : 리뷰 도움안됨 추가 API
+ *[POST] /app/users/{userId}/not-helped
+ */
+exports.notHelped = async function(req,res){
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {reviewId} = req.body;
+    if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
+    if(!reviewId) return res.response(baseResponse.REVIEW_ID_EMPTY);
+    const notHelped = await restaurantService.notHelped(userId, reviewId);
+    return res.send(notHelped);
 }
 
 /**
- * API No. 22
- * API Name : 사진 없는 매장 리뷰 상세 조회 API
- *[GET] /app/restaurant/:restaurantId/review
+ * API No. 24
+ * API Name : 리뷰 도움안됨 취소 API
+ *[PATCH] /app/users/{userId}/not-helped
  */
-exports.reviewGet = async function (req, res){
-    const restaurantId = req.params.restaurantId;
-    const getNonPhotoReview = await restaurantProvider.getNonPhotoReview(restaurantId);
-    const getReviews = await restaurantProvider.getNonReviews(restaurantId);
-    const result = [];
-    for(let i=0; i<getReviews.length; i++){
-        const getOrderedMenu = await restaurantProvider.getOrderedMenu(getReviews[i].id);
-        result.push({Review: getReviews[i], OrderedMenu: getOrderedMenu});
+exports.cancelNotHelped = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {reviewId} = req.body;
+    if(!userId) return res.response(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     }
-    getNonPhotoReview.push(result);
-    return res.send(response(baseResponse.SUCCESS, getNonPhotoReview));
+    if(!reviewId) return res.response(baseResponse.REVIEW_ID_EMPTY);
+    const cancelNotHelped = await restaurantService.cancelNotHelped(userId, reviewId);
+    return res.send(cancelNotHelped);
 }

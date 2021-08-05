@@ -143,6 +143,27 @@ exports.searchRankInfo = async function(){
   return getSearchRank;
 }
 
+//영수증 정보 조회
+exports.getReceiptsInfo = async function(userId, chargeId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const getReceiptsInfo = await userDao.selectReceiptsInfo(connection, userId, chargeId);
+  return getReceiptsInfo;
+}
+
+//영수증 메뉴 조회
+exports.getReceiptsMenu = async function(chargeId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const getReceiptsMenu = await userDao.selectReceiptsMenu(connection, chargeId);
+  return getReceiptsMenu;
+}
+
+//영수증 총 가격 조회
+exports.getReceiptsPrice = async function(chargeId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const getReceiptsPrice = await userDao.selectReceiptsPrice(connection, chargeId);
+  return getReceiptsPrice;
+}
+
 //사용자 카드 조회
 exports.getCardList = async function(userId){
   const connection = await pool.getConnection(async(conn)=>conn);

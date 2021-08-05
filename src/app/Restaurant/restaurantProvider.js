@@ -95,13 +95,23 @@ exports.getRestaurantImageUrl = async function(restaurantId) {
 exports.cheetahDeliveryRestaurant = async function(){
     const connection = await pool.getConnection(async(conn)=>conn);
     const cheetahDeliveryResult = await restaurantDao.selectCheetahDeliveryRestaurant(connection);
+    connection.release();
     return cheetahDeliveryResult;
+}
+
+//모든 배달 매장 조회
+exports.deliveryRestaurant = async function(){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const deliveryResult = await restaurantDao.selectDeliveryRestaurant(connection);
+    connection.release();
+    return deliveryResult;
 }
 
 //매장 사진 조회
 exports.getCheetahResImageUrl = async function(restaurantId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const resImage = await restaurantDao.selectResImage(connection, restaurantId);
+    connection.release();
     return resImage;
 }
 
@@ -109,6 +119,7 @@ exports.getCheetahResImageUrl = async function(restaurantId){
 exports.getNonPhotoReview = async function(restaurantId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const reviewResult = await restaurantDao.selectNonPhotoReview(connection, restaurantId);
+    connection.release();
     return reviewResult;
 }
 
@@ -116,6 +127,7 @@ exports.getNonPhotoReview = async function(restaurantId){
 exports.getNonReviews = async function(restaurantId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const nonReviews = await restaurantDao.selectNonReviews(connection, restaurantId);
+    connection.release();
     return nonReviews;
 }
 
@@ -123,6 +135,7 @@ exports.getNonReviews = async function(restaurantId){
 exports.getOrderedMenu = async function(chargeId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const nonPhotoReviewMenu = await restaurantDao.selectNonPhotoReviewMenu(connection, chargeId);
+    connection.release();
     return nonPhotoReviewMenu;
 }
 
@@ -130,6 +143,7 @@ exports.getOrderedMenu = async function(chargeId){
 exports.reviewIdCheck = async function(userId, reviewId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const reviewIdCheck = await restaurantDao.selectUserByReviewId(connection, userId, reviewId);
+    connection.release();
     return reviewIdCheck;
 }
 
@@ -137,6 +151,7 @@ exports.reviewIdCheck = async function(userId, reviewId){
 exports.reviewCheck = async function(chargeId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const reviewResult = await restaurantDao.selectReviewByChargeId(connection, chargeId);
+    connection.release();
     return reviewResult;
 }
 
@@ -144,6 +159,7 @@ exports.reviewCheck = async function(chargeId){
 exports.helpedStatusCheck = async function(userId, reviewId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const helpedStatusResult = await restaurantDao.selectHelpedStatus(connection, userId, reviewId);
+    connection.release();
     return helpedStatusResult;
 }
 
@@ -152,4 +168,18 @@ exports.availablePeriodCheck = async function(userId, reviewId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const PeriodCheck = await restaurantDao.selectReviewByPeriod(connection, userId, reviewId);
     return PeriodCheck;
+}
+
+//도움 안됨을 이미 추가했는지 확인
+exports.userCheck = async function(userId, reviewId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const userCheck = await restaurantDao.selectNotHelpedByUser(connection, userId, reviewId);
+    return userCheck;
+}
+
+//도움 안됨의 상태 확인
+exports.notHelpedCheck = async function(userId, reviewId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const notHelpedCheck = await restaurantDao.selectNotHelpedStatus(connection, userId, reviewId);
+    return notHelpedCheck;
 }

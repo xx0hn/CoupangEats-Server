@@ -39,7 +39,7 @@ exports.patchReviewHelp = async function (userId, reviewId) {
                 return response(baseResponse.SUCCESS);
             }
             else{
-                return response(errResponse(baseResponse.REDUNDANT_USERID_REVIEWID));
+                return response(errResponse(baseResponse.REDUNDANT_HELPED_REVIEWID));
             }
         }
         const updateReviewHelpResult = await restaurantDao.updateReviewHelpNum(connection, userId, reviewId);
@@ -91,5 +91,45 @@ exports.updateReview = async function (userId, reviewScore, contents, imageUrl, 
     }
     finally{
         connection.release();
+    }
+}
+
+//리뷰 도움안됨 증가
+exports.notHelped = async function (userId, reviewId){
+    try{
+        const userCheck = await restaurantProvider.userCheck(userId, reviewId);
+        if(userCheck.length>0){
+            const notHelpedCheck = await restaurantProvider.notHelpedCheck(userId, reviewId);
+            if(notHelpedCheck.length>0){
+                const connection = await pool.getConnection(async(conn)=>conn);
+                const changeNotHelpedStatus = await restaurantDao.changeNotHelpedStatus(connection,userId, reviewId);
+                connection.release();
+                return response(baseResponse.SUCCESS);
+            }
+            else
+            {
+                return response(errResponse(baseResponse.REDUNDANT_NOT_HELPED_REVIEW));
+            }
+        }
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const addNotHelped = await restaurantDao.addNotHelped(connection, userId, reviewId);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - postNotHelped Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//리뷰 도움안됨 여부 취소
+exports.cancelNotHelped = async function(userId, reviewId){
+    try{
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const cancelNotHelped = await restaurantDao.cancelNotHelped(connection, userId, reviewId);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - patchNotHelped Service error\n :${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
     }
 }

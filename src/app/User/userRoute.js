@@ -30,11 +30,9 @@ module.exports = function(app){
     //#20 검색 순위 조회 API
     app.get('/app/searchwords/rank', user.searchRank);
 
-    //#23 메뉴 담기 API
-    app.post('/app/users/add/orders', user.addOrders); //삭제
+    //#22 유저 영수증 조회 API
+    app.get('/app/users/:userId/receipts', jwtMiddleware, user.getReceipts);
 
-    //#24 결제 API
-    app.post('/app/payment', user.payment); //어려우니까 마지막에
 
     //#25 사용자 카드 조회 API (jwt 적용 완료)
     app.get('/app/users/:userId/cards',jwtMiddleware, user.getCard);

@@ -72,6 +72,11 @@ module.exports = {
 
     SEARCH_WORD_EMPTY: {"isSuccess": false, "code": 2045, "message": "검색어를 입력해주세요. "},
 
+    REVIEW_TYPE_EMPTY: {"isSuccess": false, "code": 2046, "message": "리뷰 타입을 입력해주세요. "},
+    REVIEW_TYPE_NOT_MATCH: {"isSuccess": false, "code": 2047, "message": "리뷰 타입을 정확히 입력해주세요. (PHOTO, NON-PHOTO) "},
+
+    DELIVERY_TYPE_EMPTY:{"isSuccess": false, "code": 2048, "message": "배달 유형을 입력해주세요. "},
+    DELIVERY_TYPE_NOT_MATCH:{"isSuccess": false, "code": 2049, "message": "배달 유형을 정확히 입력해주세요. (CHEETAH, ALL)"},
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
@@ -90,8 +95,9 @@ module.exports = {
     REDUNDANT_RESTAURANT_ID : {" isSuccess": false, "code": 3011, "message": "중복된 매장입니다. "},
     REDUNDANT_CARD_NUM: {"isSuccess": false, "code":3012, "message": "중복된 카드입니다. "},
     REDUNDANT_ADDRESS: {"isSuccess": false, "code":3013, "message": "중복된 주소입니다. "},
-    REDUNDANT_USERID_REVIEWID:{"isSuccess": false, "code":3014, "message": "이미 도움 버튼이 눌려있습니다.  "},
+    REDUNDANT_HELPED_REVIEWID:{"isSuccess": false, "code":3014, "message": "이미 도움 버튼이 눌려있습니다.  "},
     REDUNDANT_CHARGE_ID_REVIEW:{"isSuccess": false, "code":3015, "message": "이미 리뷰가 작성되었습니다.  "},
+    REUNDANT_NOT_HELPED_REVIEW: {"isSuccess": false, "code":3016, "message": "이미 도움 안됨 버튼이 눌려있습니다.  "},
 
     CANNOT_UPDATE_REVIEW:{"isSuccess": false, "code":3016, "message": "수정 가능 기간이 아닙니다. "},
     //Connection, Transaction 등의 서버 오류

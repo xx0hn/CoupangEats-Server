@@ -227,32 +227,30 @@ exports.searchRank = async function(req, res){
 }
 
 /**
- * API No. 23
- * API Name : 메뉴 담기 API
- * [POST] /app/users/{userId}/addOrders
+ * API No. 22
+ * API Name : 검색 순위 조회 API
+ * [GET] /app/users/{userId}/receipts
  */
-exports.addOrders = async function(req, res){
-    const {userId, restaurantId, menuId, menuCount} = req.body;
-    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
-    if(!restaurantId) return res.send(response(baseResponse.RESTAURANT_ID_EMPTY));
-    if(!menuId) return res.send(response(baseResponse.MENU_ID_EMPTY));
-    if(!menuCount) return res.send(response(baseResponse.MENU_COUNT_EMPTY));
-    const addOrders = await userService.addOrders(userId, restaurantId, menuId, menuCount);
-    return res.send(response(addOrders));
+exports.getReceipts = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {chargeId} = req.body;
+    const result = [];
+    if(!userId) return res.send(baseResponse.USER_USERID_EMPTY);
+    if(userIdFromJWT!=userId){
+        return response(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
+    if(!chargeId) return res.send(baseResponse.CHARGE_ID_EMPTY);
+    const getReceiptsInfo = await userProvider.getReceiptsInfo(userId, chargeId);
+    for(let i=0; i<getReceiptsInfo.length; i++) {
+        const getReceiptsMenu = await userProvider.getReceiptsMenu(getReceiptsInfo[i].id);
+        const getReceiptsPrice = await userProvider.getReceiptsPrice(getReceiptsInfo[i].id);
+        result.push({receiptsInfo: getReceiptsInfo, orderMenu: getReceiptsMenu, orderPrice: getReceiptsPrice});
+    }
+    return res.send(response(baseResponse.SUCCESS, result));
 }
 
-/**
- * API No. 24
- * API Name : 결제 API
- * [POST] /app/payment
- */
-exports.payment = async function(req, res){
-    const {cardId, couponId, restaurantId, request} = req.body;
-    if(!cardId) return res.send(response(baseResponse.CARD_ID_EMPTY));
-    if(!restaurantId) return res.send(response(baseResponse.RESTAURANT_ID_EMPTY));
-    const addPayment = await userService.addPayment(cardId, couponId, restaurantId, request);
-    return res.send(response(addPayment));
-}
+
 
 /**
  * API No. 25

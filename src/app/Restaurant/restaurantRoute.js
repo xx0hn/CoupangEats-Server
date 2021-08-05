@@ -17,18 +17,22 @@ module.exports = function(app) {
     //#14 매장 리뷰 생성 API (jwt 적용 완료)
     app.post('/app/users/:userId/reviews',jwtMiddleware, restaurant.addReview);
 
-    //#15 매장 리뷰 수정 API
-    app.patch('/app/users/:userId/reviews',jwtMiddleware, restaurant.editReview); //jwt 적용해야됨
+    //#15 매장 리뷰 수정 API (jwt 적용 완료)
+    app.patch('/app/users/:userId/reviews',jwtMiddleware, restaurant.editReview);
 
-    //#16 사진 있는 매장 리뷰 상세 조회 API
-    app.get('/app/restaurants/:restaurantId/photoReview', restaurant.getReview); //쿼리 스트링
+    //#16 매장 리뷰 상세 조회 API (쿼리 스트링 적용 완료)
+    app.get('/app/restaurants/:restaurantId/reviews', restaurant.getReview);
 
     //#19 매장 메인 화면 조회 API
     app.get('/app/restaurants/:restaurantId/main', restaurant.restaurantMain);
 
     //#21 치타배달 매장 조회 API
-    app.get('/app/restaurants/cheetah', restaurant.cheetahRestaurant);
+    app.get('/app/restaurants/delivery-types', restaurant.cheetahRestaurant);
 
-    //#22 사진 없는 매장 리뷰 조회 API
-    app.get('/app/restaurants/:restaurantId/review', restaurant.reviewGet); //쿼리 스트링
+
+    //#23 리뷰 도움안됨 여부 증가 API
+    app.post('/app/users/:userId/not-helped',jwtMiddleware, restaurant.notHelped);
+
+    //#24 리뷰 도움안됨 여부 취소 API
+    app.patch('/app/users/:userId/not-helped', jwtMiddleware, restaurant.cancelNotHelped);
 };

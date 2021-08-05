@@ -8,7 +8,8 @@ async function selectUserReviews(connection, userId, restaurantId){
         , a.imageUrl as ReviewImage
         , a.contents as ReviewComment
         , date_format(a.createdAt, "%Y-%m-%d") as CreatedDate
-        , helpedCount as ReviewHelpedCount
+        , case when helpedCount is null then 0 else helpedCount end as ReviewHelpedCount
+        , case when notHelpedCount is null then 0 else notHelpedCount end as ReviewNotHelpedCount
 from Review a
 left join ( select id
                     , name
@@ -21,6 +22,13 @@ left join ( select id
                 from Helped
                 group by reviewId) as c 
                 on a.id = c.reviewId
+left join ( select id
+                    , userId
+                    , reviewId
+                    , count(case when status = 'ACTIVE' and reviewId is not null then 1 end ) as 'notHelpedCount'
+                from NotHelped
+                group by reviewId ) as d
+                on a.id = d.reviewId
 where a.userId = ? and a.restaurantId = ? ;`;
   const [selectUserReviewRows] = await connection.query(selectUserReviewQuery, [userId, restaurantId]);
   return selectUserReviewRows;
@@ -343,8 +351,8 @@ async function getOrderFoods(connection, userId, chargeId) {
 async function getTotalPrice(connection, userId, chargeId) {
   const query = `
     select case
-             when c.delCost = 0 then sum(a.menuCount * b.cost)
-             else sum(a.menuCount * b.cost) - c.delCost end as TotalPrice
+             when c.delCost = 0 then sum(a.menuCount * b.cost) - e.benefits
+             else sum(a.menuCount * b.cost) + c.delCost - e.benefits as TotalPrice
     from Orders a
            left join (select id
                            , cost
@@ -354,6 +362,14 @@ async function getTotalPrice(connection, userId, chargeId) {
                            , delCost
                       from Restaurant) as c
                      on a.restaurantId = c.id
+            left join ( select couponId
+                            , id
+                        from Charge ) as d
+                        on a.chargeId = d.id
+            left join ( select id
+                            , benefits
+                        from Coupon ) as e
+                        on d.couponId = e.id
     where a.userId = ?
       and chargeId = ?;
                 `;
@@ -373,23 +389,113 @@ group by categoryId;`;
   return searchRankRows;
 }
 
-//주문 추가
-async function postOrders(connection, userId, restaurantId, menuId, menuCount){
-  const postOrdersQuery=`
-     insert into Orders(userId, restaurantId, menuId, menuCount)
-    values (?, ?, ?, ?);`;
-  const [postOrdersRows] = await connection.query(postOrdersQuery, [userId, restaurantId, menuId, menuCount]);
-  return postOrdersRows;
+//영수증 정보 조회
+async function selectReceiptsInfo(connection, userId, chargeId){
+  const selectReceiptsInfoQuery=`
+  select a.id as id
+            , a.restaurantId as RestaurantId
+            , b.name as RestaurantName
+            , a.createdAt as ChargeTime
+            , g.name as BankName
+            , concat(left(f.cardNum, 4), '****') as CardNum
+from Charge a
+left join ( select id
+                    , name
+                    , delCost
+                from Restaurant ) as b
+                on a.restaurantId = b.id
+left join ( select id
+                    , userId
+                    , restaurantId
+                    , chargeId
+                    , menuId
+                    , menuCount
+                from Orders ) as c
+                on a.id = c.chargeId
+left join ( select id
+                    , name
+                    , restaurantId
+                    , cost
+                from Menu ) as d
+                on c.menuId = d.id
+left join ( select id
+                    , userId
+                    , benefits
+                from Coupon ) as e
+                on c.userId = e.userId
+left join ( select id
+                    , cardNum
+                    , bankId
+                from Card ) as f
+                on a.cardId = f.id
+left join ( select id
+                    , name
+                from Bank ) as g
+                on f.bankId = g.id
+where c.userId = ? and a.id = ?
+group by c.userId;`;
+  const [receiptsRows] = await connection.query(selectReceiptsInfoQuery, [userId, chargeId]);
+  return receiptsRows;
 }
 
-//결제
-async function postPayment(connection, cardId, couponId, restaurantId, request){
-  const postPaymentQuery=`
-  insert into Charge(cardId, couponId, restaurantId, request)
-  values (?,?,?,?);`;
-  const [postPaymentRows] = await connection.query(postPaymentQuery, [cardId, couponId, restaurantId, request]);
-  return postPaymentRows;
+//영수증 음식 조회
+async function selectReceiptsMenu(connection, chargeId){
+  const selectReceiptsMenuQuery=`
+  select a.id as MenuId
+            , a.name as MenuName
+            , b.menuCount as MenuCount
+            , concat(format(a.cost*b.menuCount, 0),'원') as MenuCost
+from Menu a
+left join ( select id
+                    , userId
+                    , restaurantId
+                    , chargeId
+                    , menuId
+                    , menuCount
+                from Orders ) as b
+                on a.id = b.menuId
+left join ( select id
+                from Charge ) as c
+                on b.chargeId = c.id
+where c.id = ?;`;
+  const [receiptsMenuRows] = await connection.query(selectReceiptsMenuQuery, chargeId);
+  return receiptsMenuRows;
 }
+
+//영수증 금액 조회
+async function selectReceiptsPrice(connection, chargeId){
+  const selectReceiptsPriceQuery=`
+  select concat(format(sum(b.menuCount*a.cost), 0), '원') as OrderCost
+            , concat(format(d.delCost, 0), '원') as DeliveryCost
+            , case when e.benefits is null then concat(0, '원') else concat(format(e.benefits,0),'원') end as DiscountCost
+            , concat(format(sum(b.menuCount*a.cost)+d.delCost-e.benefits, 0), '원') as TotalCost
+from Menu a
+left join ( select id
+                    , userId
+                    , restaurantId
+                    , chargeId
+                    , menuId
+                    , menuCount
+                from Orders ) as b
+                on a.id = b.menuId
+left join ( select id
+                    , couponId
+                from Charge ) as c
+                on b.chargeId = c.id
+left join ( select id
+                    , delCost
+                from Restaurant ) as d
+                on b.restaurantId = d.id
+left join ( select id
+                    , benefits
+                from Coupon ) as e
+                on c.couponId = e.id
+where c.id = ?;`;
+  const [totalCostRows] = await connection.query(selectReceiptsPriceQuery, chargeId);
+  return totalCostRows;
+}
+
+
 
 //사용자 카드 조회
 async function selectUserCardList(connection, userId){
@@ -465,8 +571,9 @@ module.exports = {
   getOrderFoods,
   getTotalPrice,
   selectSearchRank,
-  postOrders,
-  postPayment,
+  selectReceiptsInfo,
+  selectReceiptsMenu,
+  selectReceiptsPrice,
   selectUserCardList,
   postUserCard,
   patchUserCard,

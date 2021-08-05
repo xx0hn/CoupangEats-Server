@@ -230,6 +230,8 @@ async function getReviews(connection, restaurantId){
             , concat(timestampdiff(day, a.createdAt, current_timestamp), '일전') as DaysAgo
             , a.imageUrl as ReviewImage
             , a.contents as ReviewContents
+            , case when helpedCount is null then 0 else helpedCount end as ReviewHelpedCount
+            , case when notHelpedCount is null then 0 else notHelpedCount end as ReviewNotHelpedCount
 from Review a
 left join ( select id
                 from Restaurant ) as b
@@ -246,6 +248,20 @@ left join ( select id
                     , name
                 from User ) as d
                 on a.userId = d.id
+left join ( select id
+                    , userId
+                    , reviewId
+                    , count(case when status ='ACTIVE' and reviewId is not null then 1 end ) as 'helpedCount'
+            from Helped
+            group by reviewId ) as e
+            on a.id = e.reviewId
+left join ( select id
+                    , userId
+                    , reviewId
+                    , count(case when status = 'ACTIVE' and reviewId is not null then 1 end ) as 'notHelpedCount'
+                from NotHelped
+                group by reviewId ) as f
+                on a.id = f.reviewId
 where b.id = ? and a.imageUrl is not null
 order by a.createdAt desc;`;
     const [reviewsRows] = await connection.query(getReviewsQuery, restaurantId);
@@ -371,7 +387,7 @@ async function selectCheetahDeliveryRestaurant(connection){
     const selectCheetahDeliveryRestaurantQuery=`
     select a.id as id
         , a.name as RestaurantName
-        , case when a.cheetaDel = 'CHEETAH' then '치타배달' end as CheetahDelivery
+        , a.cheetaDel as DeliveryType
         , case when starGrade is null then 0 else starGrade end as StarGrade
         , case when reviewCount is null then 0 else reviewCount end as ReviewCount
         , case when a.delCost = 0 then '무료배달' else concat(format(a.delCost,0),'원') end as DeliveryCost
@@ -391,6 +407,32 @@ left join ( select restaurantId
 where a.cheetaDel = 'CHEETAH';`;
     const [cheetahRestaurantRows] = await connection.query(selectCheetahDeliveryRestaurantQuery);
     return cheetahRestaurantRows;
+}
+
+//모든 배달 유형 매장 조회
+async function selectDeliveryRestaurant(connection){
+    const selectDeliveryRestaurantQuery=`
+    select a.id as id
+        , a.name as RestaurantName
+        , a.cheetaDel as DeliveryType
+        , case when starGrade is null then 0 else starGrade end as StarGrade
+        , case when reviewCount is null then 0 else reviewCount end as ReviewCount
+        , case when a.delCost = 0 then '무료배달' else concat(format(a.delCost,0),'원') end as DeliveryCost
+        , concat(a.delTIme,'-',a.maxDelTIme,'분') as DeliveryTime
+from Restaurant a
+left join ( select restaurantId
+                    , latitude
+                    , longtitude
+                from RestaurantAddress ) as b
+                on a.id = b.restaurantId
+left join ( select restaurantId
+                    , round(sum(score)/count(restaurantId), 1) as 'starGrade'
+                    , count(restaurantId) as 'reviewCount'
+                from Review
+                group by restaurantId) as c
+                on a.id = c.restaurantId;`;
+    const [allDeliveryRestaurantRows] = await connection.query(selectDeliveryRestaurantQuery);
+    return allDeliveryRestaurantRows;
 }
 
 //매장 이미지 조회
@@ -432,11 +474,13 @@ where a.id = ?;`;
 async function selectNonReviews(connection, restaurantId){
     const selectNonReviewsQuery=`
     select  a.chargeId as id
-           , d.id as UserId
+            , d.id as UserId
             , concat(left(d.name, 1), '**') as UserName
             , a.score as StarGrade
             , concat(timestampdiff(day, a.createdAt, current_timestamp), '일전') as DaysAgo
             , a.contents as ReviewContents
+            , case when helpedCount is null then 0 else helpedCount end as ReviewHelpedCount
+            , case when notHelpedCount is null then 0 else notHelpedCount end as ReviewNotHelpedCount
 from Review a
 left join ( select id
                 from Restaurant ) as b
@@ -453,6 +497,20 @@ left join ( select id
                     , name
                 from User ) as d
                 on a.userId = d.id
+left join ( select id
+                 , userId
+                 , reviewId
+                 , count(case when status ='ACTIVE' and reviewId is not null then 1 end ) as 'helpedCount'
+            from Helped
+            group by reviewId ) as e
+          on a.id = e.reviewId
+left join ( select id
+                 , userId
+                 , reviewId
+                 , count(case when status = 'ACTIVE' and reviewId is not null then 1 end ) as 'notHelpedCount'
+            from NotHelped
+            group by reviewId ) as f
+          on a.id = f.reviewId
 where b.id = ? and a.imageUrl is null
 order by a.createdAt desc;`;
     const [nonReviewsRows] = await connection.query(selectNonReviewsQuery, restaurantId);
@@ -481,6 +539,55 @@ async function selectNonPhotoReviewMenu(connection, chargeId){
     const [nonPhotoReviewMenuRows] = await connection.query(selectNonPhotoReviewMenuQuery, chargeId);
     return nonPhotoReviewMenuRows;
 }
+
+//도움 안됨을 이미 추가했는지 확인
+async function selectNotHelpedByUser(connection, userId, reviewId){
+    const selectNotHelpedByUserQuery=`
+    select id
+    from NotHelped
+    where userId = ? and reviewId = ?;`;
+    const [notHelpedRows] = await connection.query(selectNotHelpedByUserQuery, [userId, reviewId]);
+    return notHelpedRows;
+}
+
+//도움 안됨의 상태 확인
+async function selectNotHelpedStatus(connection, userId, reviewId){
+    const notHelpedCheckQuery=`
+    select id
+    from NotHelped
+    where userId = ? and reviewId = ? and (status = 'INACTIVE' or status = 'DELETED');`;
+    const [notHelpedStatusRows] = await connection.query(notHelpedCheckQuery, [userId, reviewId]);
+    return notHelpedStatusRows;
+}
+
+//도움 안됨의 상태 변경
+async function changeNotHelpedStatus(connection, userId, reviewId){
+    const changeNotHelpedStatusQuery=`
+    update NotHelped
+    set status = 'ACTIVE'
+    where userId = ? and reviewId = ?;`;
+    const [changeNotHelpedStatusRows] = await connection.query(changeNotHelpedStatusQuery, [userId, reviewId]);
+    return changeNotHelpedStatusRows;
+}
+
+//도움 안됨 추가
+async function addNotHelped(connection, userId, reviewId){
+    const addNotHelpedQuery=`
+    insert into NotHelped(userId, reviewId)
+    values (?, ?);`;
+    const [notHelpedRows] = await connection.query(addNotHelpedQuery, [userId, reviewId]);
+    return notHelpedRows;
+}
+
+//도움 안됨 취소
+async function cancelNotHelped(connection, userId, reviewId){
+    const cancelNotHelpedQuery=`
+    update NotHelped
+    set status = 'DELETED';`;
+    const [cancelNotHelpedRows] = await connection.query(cancelNotHelpedQuery, [userId, reviewId]);
+    return cancelNotHelpedRows;
+}
+
 module.exports = {
     sortNewRestaurant,
     sortStarGradeRestaurant,
@@ -503,8 +610,14 @@ module.exports = {
     getSomeReview,
     getRestaurantImageUrl,
     selectCheetahDeliveryRestaurant,
+    selectDeliveryRestaurant,
     selectResImage,
     selectNonPhotoReview,
     selectNonReviews,
     selectNonPhotoReviewMenu,
+    selectNotHelpedByUser,
+    selectNotHelpedStatus,
+    changeNotHelpedStatus,
+    addNotHelped,
+    cancelNotHelped
 };

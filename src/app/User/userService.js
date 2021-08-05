@@ -139,32 +139,8 @@ exports.postUserSignIn = async function (email, password) {
     }
 };
 
-//메뉴 담기
-exports.addOrders = async function (userId, restaurantId, menuId, menuCount){
-    try{
-        // const insertOrdersParams = [restaurantId, menuId, menuCount];
-        const connection = await pool.getConnection(async(conn)=>conn);
-        const addOrders = await userDao.postOrders(connection, userId, restaurantId, menuId, menuCount);
-        connection.release();
-        return response(baseResponse.SUCCESS);
-    } catch(err){
-        logger.error(`App - postOrders Service error\n: ${err.message}`);
-        return errResponse(baseResponse.DB_ERROR);
-    }
-}
 
-//결제
-exports.addPayment = async function (cardId, couponId, restaurantId, request){
-    try{
-        const connection = await pool.getConnection(async(conn)=>conn);
-        const addPayment = await userDao.postPayment(connection, cardId, couponId, restaurantId, request);
-        connection.release();
-        return response(baseResponse.SUCCESS);
-    } catch(err){
-        logger.error(`App - postPayment Service error\n: ${err.message}`);
-        return errResponse(baseResponse.DB_ERROR);
-    }
-}
+
 
 //사용자 카드 등록
 exports.postCardList = async function (userId, bankId, cardNum){
