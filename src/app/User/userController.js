@@ -337,7 +337,7 @@ exports.loginKakao = async function (req, res) {
             });
         } catch (err) {
             logger.error(`Can't get kakao profile\n: ${JSON.stringify(err)}`);
-            return res.send(errResponse(baseResponse.USER_COMMENT_EMPTY));
+            return res.send(errResponse(baseResponse.USER_ACCESS_TOKEN_WRONG));
         }
 
         const name = kakao_profile.data.kakao_account.profile.nickname;

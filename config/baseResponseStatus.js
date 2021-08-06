@@ -80,7 +80,7 @@ module.exports = {
     DELIVERY_TYPE_EMPTY:{"isSuccess": false, "code": 2048, "message": "배달 유형을 입력해주세요. "},
     DELIVERY_TYPE_NOT_MATCH:{"isSuccess": false, "code": 2049, "message": "배달 유형을 정확히 입력해주세요. (CHEETAH, ALL)"},
 
-    USER_COMMENT_EMPTY:{"isSuccess": false, "code": 2050, "message": "accessToken을 입력해주세요. "},
+    USER_ACCESS_TOKEN_WRONG:{"isSuccess": false, "code": 2050, "message": "accessToken을 정확히 입력해주세요. "},
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
