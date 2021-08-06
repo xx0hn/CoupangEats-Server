@@ -35,4 +35,7 @@ module.exports = function(app) {
 
     //#24 리뷰 도움안됨 여부 취소 API
     app.patch('/app/users/:userId/not-helped', jwtMiddleware, restaurant.cancelNotHelped);
+
+    //#30 매장 정보 조회 API
+    app.get('/app/restaurants/:restaurantId/info', restaurant.getRestaurantInfo);
 };

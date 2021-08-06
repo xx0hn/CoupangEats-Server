@@ -179,3 +179,4 @@ exports.cardNumCheck = async function(userId, bankId, cardNum){
   connection.release();
   return userCardNum;
 }
+

@@ -246,7 +246,7 @@ exports.notHelped = async function(req,res){
     }
     if(!reviewId) return res.response(baseResponse.REVIEW_ID_EMPTY);
     const notHelped = await restaurantService.notHelped(userId, reviewId);
-    return res.send(notHelped);
+    return res.send(response(notHelped));
 }
 
 /**
@@ -264,5 +264,17 @@ exports.cancelNotHelped = async function(req, res){
     }
     if(!reviewId) return res.response(baseResponse.REVIEW_ID_EMPTY);
     const cancelNotHelped = await restaurantService.cancelNotHelped(userId, reviewId);
-    return res.send(cancelNotHelped);
+    return res.send(response(cancelNotHelped));
+}
+
+/**
+ * API No. 30
+ * API Name : 매장 정보 조회 API
+ *[GET] /app/restaurants/{restaurantId}/info
+ */
+exports.getRestaurantInfo = async function(req, res){
+    const restaurantId = req.params.restaurantId;
+    if(!restaurantId) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
+    const getRestaurantInfo = await restaurantProvider.getRestaurantInfo(restaurantId);
+    return res.send(response(baseResponse.SUCCESS, getRestaurantInfo));
 }

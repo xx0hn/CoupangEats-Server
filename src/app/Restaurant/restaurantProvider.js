@@ -183,3 +183,10 @@ exports.notHelpedCheck = async function(userId, reviewId){
     const notHelpedCheck = await restaurantDao.selectNotHelpedStatus(connection, userId, reviewId);
     return notHelpedCheck;
 }
+
+//매장 정보 조회
+exports.getRestaurantInfo = async function(restaurantId){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const getRestaurantInfo = await restaurantDao.selectRestaurantInfo(connection, restaurantId);
+    return getRestaurantInfo;
+}

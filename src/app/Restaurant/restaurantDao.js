@@ -588,6 +588,32 @@ async function cancelNotHelped(connection, userId, reviewId){
     return cancelNotHelpedRows;
 }
 
+//매장 정보 조회
+async function selectRestaurantInfo(connection, restaurantId){
+    const selectRestaurantInfoQuery=`
+    select a.id as RestaurantId
+        , a.name as RestaurantName
+        , concat(substring(a.phoneNum,1,2),'-',substring(a.phoneNum, 3,3),'-',substring(a.phoneNum,5,4)) as PhoneNumber
+        , concat(b.roadAddress,' ', b.detailAddress) as Address
+        , a.owner as OwnerName
+        , concat(substring(a.businessNum,1,2),'-',substring(a.businessNum,3,3),'-',substring(a.businessNum, 6, 5)) as BusinessNumber
+        , a.businessName as BusinessName
+        , concat(substring(a.openTime,1,5), '~', substring(a.closeTime,1,5)) as BusinessHours
+        , a.restaurantInfo as RestaurantInfo
+        , a.foodInfo as FoodInfo
+from Restaurant a
+left join ( select roadAddress
+                    , detailAddress
+                    , latitude
+                    , longtitude
+                    , restaurantId
+                from RestaurantAddress ) as b
+                on a.id = b.restaurantId
+where a.id = ?;`;
+    const [restaurantInfoRows] = await connection.query(selectRestaurantInfoQuery, restaurantId);
+    return restaurantInfoRows;
+}
+
 module.exports = {
     sortNewRestaurant,
     sortStarGradeRestaurant,
@@ -619,5 +645,6 @@ module.exports = {
     selectNotHelpedStatus,
     changeNotHelpedStatus,
     addNotHelped,
-    cancelNotHelped
+    cancelNotHelped,
+    selectRestaurantInfo,
 };
