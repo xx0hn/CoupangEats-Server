@@ -76,11 +76,11 @@ exports.phoneNumCheck = async function (phoneNum){
 }
 
 //비밀번호 확인
-exports.passwordCheck = async function (selectUserPasswordParams) {
+exports.passwordCheck = async function (selectUserParams) {
   const connection = await pool.getConnection(async (conn) => conn);
   const passwordCheckResult = await userDao.selectUserPassword(
       connection,
-      selectUserPasswordParams
+      selectUserParams
   );
   connection.release();
   return passwordCheckResult[0];

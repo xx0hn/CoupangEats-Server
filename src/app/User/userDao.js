@@ -122,8 +122,8 @@ async function selectUserId(connection, userId) {
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
   const insertUserInfoQuery = `
-    insert into User(email, password, name, phoneNum, sex)
-    values (?, ?, ?, ?, ?);
+    insert into User(email, password, name, phoneNum)
+    values (?, ?, ?, ?);
     `;
   const insertUserInfoRow = await connection.query(
     insertUserInfoQuery,
@@ -543,15 +543,16 @@ async function selectUserCardNum(connection, userId, bankId, cardNum){
   return userCardNumRows;
 }
 
-// //사용자 회원 탈퇴
-// async function signOutUser(connection, selectUserPasswordParams){
-//   const signOutUserQuery=`
-//   update User
-// set status = 2
-// where id = ? and email = ? and password = ?;`;
-//   const [signOutRows] = await connection.query(signOutUserQuery, selectUserPasswordParams);
-//   return signOutRows;
-// }
+//소셜 로그인 유저 생성
+async function insertSocialUserInfo(connection, insertUserInfoParams) {
+  const insertUserInfoQuery = `
+        INSERT INTO User(name, email, loginStatus)
+        VALUES ( ?, ?, ?);
+    `;
+  const insertUserInfoRow = await connection.query(insertUserInfoQuery, insertUserInfoParams);
+  return insertUserInfoRow;
+}
+
 module.exports = {
   selectUserReviews,
   selectMenuInfo,
@@ -578,5 +579,5 @@ module.exports = {
   postUserCard,
   patchUserCard,
   selectUserCardNum,
-  // signOutUser
+  insertSocialUserInfo,
 };

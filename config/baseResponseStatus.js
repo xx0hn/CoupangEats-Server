@@ -23,6 +23,8 @@ module.exports = {
     SIGNUP_SEX_EMPTY : {"isSuccess" : false, "code": 2023, "message": "성별을 입력해주세요. "},
     SIGNUP_SEX_ERROR_TYPE : {"isSuccess": false, "code": 2024, "message": "성별 형식을 정확하게 입력해주세요(male, female). "},
 
+    SIGNIN_EMAIL_ERROR_TYPE: { "isSuccess": false, "code": 2051, "message":"이메일을 형식을 정확하게 입력해주세요." },
+
 
     USER_USERID_EMPTY : { "isSuccess": false, "code": 2012, "message": "userId를 입력해주세요." },
     USER_USERID_NOT_EXIST : { "isSuccess": false, "code": 2013, "message": "해당 회원이 존재하지 않습니다." },
@@ -78,6 +80,8 @@ module.exports = {
     DELIVERY_TYPE_EMPTY:{"isSuccess": false, "code": 2048, "message": "배달 유형을 입력해주세요. "},
     DELIVERY_TYPE_NOT_MATCH:{"isSuccess": false, "code": 2049, "message": "배달 유형을 정확히 입력해주세요. (CHEETAH, ALL)"},
 
+    USER_COMMENT_EMPTY:{"isSuccess": false, "code": 2050, "message": "accessToken을 입력해주세요. "},
+
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_PHONENUM : { "isSuccess": false, "code": 3002, "message":"중복된 전화번호입니다." },
@@ -88,6 +92,7 @@ module.exports = {
     SIGNIN_PASSWORD_EMPTY : { "isSuccess": false, "code": 3006, "message": "비밀번호를 입력 해주세요." },
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": false, "code": 3007, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },
     SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": false, "code": 3008, "message": "탈퇴 된 계정입니다. 고객센터에 문의해주세요." },
+
 
     SIGNOUT_EMAIL_WRONG : {"isSuccess": false, "code": 3009, "message": "아이디가 잘못 되었습니다. "},
     SIGNOUT_PASSWORD_WRONG : { "isSuccess": false, "code": 3010, "message": "비밀번호가 잘못 되었습니다." },
@@ -100,6 +105,8 @@ module.exports = {
     REUNDANT_NOT_HELPED_REVIEW: {"isSuccess": false, "code":3016, "message": "이미 도움 안됨 버튼이 눌려있습니다.  "},
 
     CANNOT_UPDATE_REVIEW:{"isSuccess": false, "code":3016, "message": "수정 가능 기간이 아닙니다. "},
+
+
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},
     SERVER_ERROR : { "isSuccess": false, "code": 4001, "message": "서버 에러"},
