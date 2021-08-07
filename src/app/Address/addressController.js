@@ -53,6 +53,7 @@ exports.removeAddress = async function(req, res) {
 exports.addAddress = async function(req, res) {
     const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
+    const {setStatus} = req.query;
     const {roadAddress, detailAddress, roadNavigate, latitude, longtitude} = req.body;
 
     if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
@@ -63,8 +64,11 @@ exports.addAddress = async function(req, res) {
     if(!detailAddress) return res.send(response(baseResponse.DETAIL_ADDRESS_EMPTY));
     if(!latitude) return res.send(response(baseResponse.LATITUDE_EMPTY));
     if(!longtitude) return res.send(response(baseResponse.LONGTITUDE_EMPTY));
+    if(!setStatus) return res.send(response(baseResponse.SET_STATUS_EMPTY));
+    if(setStatus!=='HOME'&&setStatus!=='COMPANY'&&setStatus!=='NOT')
+        return res.send(response(baseResponse.SET_STATUS_TYPE_ERROR));
 
-    const addAddressInfo = await addressService.additAddress(userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude);
+    const addAddressInfo = await addressService.additAddress(userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude, setStatus);
     return res.send(response(addAddressInfo));
 }
 

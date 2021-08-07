@@ -11,3 +11,12 @@ exports.retrieveAddress = async function(userId){
 
     return addressResult;
 }
+
+//setStatus가 같은 것이 있는지 확인
+exports.checkHomeAddress = async function(userId, setStatus){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const homeAddressResult = await addressDao.selectHomeAddress(connection, userId, setStatus);
+    connection.release();
+    return homeAddressResult;
+}
+

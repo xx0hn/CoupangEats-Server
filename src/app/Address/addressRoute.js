@@ -9,9 +9,10 @@ module.exports = function(app) {
     //#5 배송지 삭제 API (jwt 적용 완료!)
     app.patch('/app/users/:userId/addresses',jwtMiddleware, address.removeAddress);
 
-    //#6 배송지 추가 API (jwt 적용 완료!)
+    //#6 배송지 추가 API (jwt, query string, transaction 적용 완료!)
     app.post('/app/users/:userId/addresses', jwtMiddleware, address.addAddress);
 
     //#7 기본 배송지 선택 API (jwt, transaction 적용 완료!)
     app.patch('/app/users/:userId/default-address', jwtMiddleware, address.defaultAddress);
+
 }

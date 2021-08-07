@@ -26,16 +26,31 @@ exports.rmAddress = async function(userId, addressId){
 }
 
 //배송지 추가
-exports.additAddress = async function(userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude){
+exports.additAddress = async function(userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude, setStatus){
+    const connection = await pool.getConnection(async (conn) => conn);
    try {
-       const connection = await pool.getConnection(async (conn) => conn);
-       const additAddressResult = await addressDao.additAddressInfo(connection, userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude);
-       connection.release();
-
+       await connection.beginTransaction();
+       if(setStatus === 'HOME') {
+           const checkHomeAddress = await addressProvider.checkHomeAddress(userId, setStatus);
+           if (checkHomeAddress.length > 0) {
+               const homeAddressNot = await addressDao.homeAddressNot(connection, userId, setStatus);
+           }
+       }
+       else if(setStatus === 'COMPANY') {
+           const checkHomeAddress = await addressProvider.checkHomeAddress(userId, setStatus);
+           if (checkHomeAddress.length > 0) {
+               const homeAddressNot = await addressDao.homeAddressNot(connection, userId, setStatus);
+           }
+       }
+       const additAddressResult = await addressDao.additAddressInfo(connection, userId, roadAddress, detailAddress, roadNavigate, latitude, longtitude, setStatus);
+       await connection.commit();
        return response(baseResponse.SUCCESS);
    } catch(err) {
-       logger.error(`App - addAddress Service error\n: ${err.message}`);
+       await connection.rollback();
+       logger.error(`App - addAddress Service Transaction error\n: ${err.message}`);
        return errResponse(baseResponse.DB_ERROR);
+   } finally {
+       connection.release();
    }
 }
 

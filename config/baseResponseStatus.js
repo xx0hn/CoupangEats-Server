@@ -82,6 +82,9 @@ module.exports = {
 
     USER_ACCESS_TOKEN_WRONG:{"isSuccess": false, "code": 2050, "message": "accessToken을 정확히 입력해주세요. "},
 
+    SET_STATUS_EMPTY: {"isSuccess": false, "code": 2051, "message": "배송지 설정을 입력해주세요. "},
+    SET_STATUS_TYPE_ERROR: {"isSuccess": false, "code": 2052, "message": "배송지 설정을 정확히 입력해주세요. (HOME, COMPANY, NOT) "},
+
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_PHONENUM : { "isSuccess": false, "code": 3002, "message":"중복된 전화번호입니다." },
