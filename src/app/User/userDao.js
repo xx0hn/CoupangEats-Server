@@ -582,6 +582,16 @@ async function selectPassword(connection,idHashedPWParams){
   return userPasswordRows;
 }
 
+//회원탈퇴
+async function patchUserStatus(connection, userId){
+  const patchUserStatusQuery=`
+  update User
+  set status = 'DELETED'
+  where id = ?;`;
+  const [patchUserStatusRows] = await connection.query(patchUserStatusQuery, userId);
+  return patchUserStatusRows;
+}
+
 module.exports = {
   selectUserReviews,
   selectMenuInfo,
@@ -612,4 +622,5 @@ module.exports = {
   updateUserPhoneNum,
   userPhoneNum,
   selectPassword,
+  patchUserStatus,
 };

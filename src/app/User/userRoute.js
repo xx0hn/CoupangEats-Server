@@ -81,10 +81,14 @@ module.exports = function(app) {
 
     // TODO: After 로그인 인증 방법 (JWT)
     //#31 회원 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
-    app.patch('/app/users/:userId/info', jwtMiddleware, user.patchUsers)
+    app.patch('/app/users/:userId/info', jwtMiddleware, user.patchUsers);
+
+    // TODO: 탈퇴하기 API
+    //#32 회원 탈퇴 API
+    app.patch('/app/users/:userId/withdrawal', jwtMiddleware, user.patchUserStatus);
 
 };
 
 
-// TODO: 탈퇴하기 API
+
 

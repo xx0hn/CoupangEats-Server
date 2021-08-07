@@ -20,11 +20,10 @@ const baseResponseStatus = require('../../../config/baseResponseStatus');
 
 
 /**
- * API No.
+ * API No. 31
  * API Name : 회원 정보 수정 API + JWT + Validation
  * [PATCH] /app/users/:userId
  * path variable : userId
- * body : nickname
  */
 exports.patchUsers = async function (req, res) {
 
@@ -387,3 +386,21 @@ exports.loginKakao = async function (req, res) {
         return res.send(errResponse(baseResponse.USER_INFO_EMPTY));
     }
 };
+
+/**
+ * API No. 32
+ * API Name : 회원탈퇴 API
+ * [PATCH] /app/users/{userId}/withdrawal
+ */
+exports.patchUserStatus = async function(req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const {password} = req.body;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
+    if(!password) return res.send(response(baseResponse.SIGNIN_PASSWORD_EMPTY));
+    const patchUserStatus = await userService.patchUserStatus(userId, password);
+    return res.send(response(patchUserStatus));
+}

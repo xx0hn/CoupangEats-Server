@@ -236,3 +236,26 @@ exports.createSocialUser = async function (name, email, loginStatus) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+//회원탈퇴
+exports.patchUserStatus = async function (userId, password){
+    try{
+        console.log(userId)
+        const hashedPassword = await crypto
+            .createHash('sha512')
+            .update(password)
+            .digest('hex');
+        const idHashedPWParams = [hashedPassword, userId];
+        const passwordRows = await userProvider.checkPassword(idHashedPWParams);
+        if(passwordRows.length<1){
+            return errResponse(baseResponse.SIGNOUT_PASSWORD_WRONG)
+        }
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const patchUserStatus = await userDao.patchUserStatus(connection, userId);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - withdrawal Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
