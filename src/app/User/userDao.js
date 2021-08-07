@@ -352,7 +352,7 @@ async function getTotalPrice(connection, userId, chargeId) {
   const query = `
     select case
              when c.delCost = 0 then sum(a.menuCount * b.cost) - e.benefits
-             else sum(a.menuCount * b.cost) + c.delCost - e.benefits as TotalPrice
+             else sum(a.menuCount * b.cost) + c.delCost - e.benefits end as TotalPrice
     from Orders a
            left join (select id
                            , cost
