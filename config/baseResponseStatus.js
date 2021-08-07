@@ -85,6 +85,12 @@ module.exports = {
     SET_STATUS_EMPTY: {"isSuccess": false, "code": 2051, "message": "배송지 설정을 입력해주세요. "},
     SET_STATUS_TYPE_ERROR: {"isSuccess": false, "code": 2052, "message": "배송지 설정을 정확히 입력해주세요. (HOME, COMPANY, NOT) "},
 
+    EDIT_INFO_TYPE_EMPTY: {"isSuccess": false, "code": 2053, "message": "변경할 정보의 유형을 입력해주세요. "},
+    EDIT_INFO_TYPE_ERROR: {"isSuccess": false, "code": 2054, "message": "변경할 정보의 유형을 정확히 입력해주세요. (PASSWORD, PHONENUM) "},
+    EDIT_PASSWORD_EMPTY: {"isSuccess": false, "code": 2055, "message": "변경할 비밀번호를 입력해주세요. "},
+    EDIT_PHONE_NUM_EMPTY: {"isSuccess": false, "code": 2056, "message": "변경할 전화번호를 입력해주세요. "},
+
+
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_PHONENUM : { "isSuccess": false, "code": 3002, "message":"중복된 전화번호입니다." },
@@ -108,6 +114,11 @@ module.exports = {
     REUNDANT_NOT_HELPED_REVIEW: {"isSuccess": false, "code":3016, "message": "이미 도움 안됨 버튼이 눌려있습니다.  "},
 
     CANNOT_UPDATE_REVIEW:{"isSuccess": false, "code":3016, "message": "수정 가능 기간이 아닙니다. "},
+
+    REDUNDANT_BEFORE_PHONE_NUM:{"isSuccess": false, "code":3017, "message": "변경 전 전화번호와 같습니다. "},
+    REDUNDANT_PHONE_NUM:{"isSuccess": false, "code":3018, "message": "중복되는 전화번호입니다. "},
+    REDUNDANT_BEFORE_PASSWORD:{"isSuccess": false, "code":3019, "message": "변경 전 비밀번호와 같습니다. "},
+
 
 
     //Connection, Transaction 등의 서버 오류

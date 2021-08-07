@@ -31,17 +31,25 @@ exports.patchUsers = async function (req, res) {
     // jwt - userId, path variable :userId
 
     const userIdFromJWT = req.verifiedToken.userId
-
     const userId = req.params.userId;
-    const nickname = req.body.nickname;
+    const {infoType} = req.query;
+    const {editInfo} = req.body;
 
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
-        if (!nickname) return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
-
-        const editUserInfo = await userService.editUser(userId, nickname)
-        return res.send(editUserInfo);
+        if(!infoType) return res.send(errResponse(baseResponse.EDIT_INFO_TYPE_EMPTY));
+        if(infoType!=='PASSWORD'&&infoType!=='PHONENUM') return res.send(errResponse(baseResponse.EDIT_INFO_TYPE_ERROR));
+        if(infoType === `PASSWORD`){
+            if(!editInfo) return response(baseResponse.EDIT_PASSWORD_EMPTY);
+            const editUserInfo = await userService.editUserPassWord(editInfo, userId);
+            return res.send(response(editUserInfo));
+        }
+        else if(infoType==='PHONENUM'){
+            if(!editInfo) return response(baseResponse.EDIT_PHONE_NUM_EMPTY);
+            const editUserInfo = await userService.editUserPhoneNum(editInfo, userId);
+            return res.send(response(editUserInfo));
+        }
     }
 };
 

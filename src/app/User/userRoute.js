@@ -33,9 +33,7 @@ module.exports = function(app) {
     passport.deserializeUser((user, done) => {
         done(null, user); // 여기의 user가 req.user가 됨
     });
-    // TODO: After 로그인 인증 방법 (JWT)
-    // 회원 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
-    app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers)
+   
 
     //#2 유저가 작성한 리뷰 조회 API
     app.get('/app/users/:userId/reviews', jwtMiddleware, user.getUserReview);
@@ -80,6 +78,11 @@ module.exports = function(app) {
     //#29 카카오 소셜 로그인 API
     app.post('/app/login/kakao', user.loginKakao);
     app.get('/auth/kakao/callback', passport.authenticate('kakao-login', { failureRedirect: '/auth', successRedirect: '/' }));
+
+    // TODO: After 로그인 인증 방법 (JWT)
+    //#31 회원 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
+    app.patch('/app/users/:userId/info', jwtMiddleware, user.patchUsers)
+
 };
 
 

@@ -38,4 +38,5 @@ module.exports = function(app) {
 
     //#30 매장 정보 조회 API
     app.get('/app/restaurants/:restaurantId/info', restaurant.getRestaurantInfo);
+
 };

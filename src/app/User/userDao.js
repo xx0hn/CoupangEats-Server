@@ -161,14 +161,23 @@ async function selectUserAccount(connection, email) {
   );
   return selectUserAccountRow[0];
 }
-
-async function updateUserInfo(connection, id, nickname) {
+//전화번호 수정
+async function updateUserPhoneNum(connection, editInfo, userId) {
   const updateUserQuery = `
   UPDATE User 
-  SET name = ?
+  SET phoneNum = ?
   WHERE id = ?;`;
-  const updateUserRow = await connection.query(updateUserQuery, [nickname, id]);
-  return updateUserRow[0];
+  const [updateUserRow] = await connection.query(updateUserQuery, [editInfo, userId]);
+  return updateUserRow;
+}
+//비밀번호 수정
+async function updateUserPassWord(connection, hashedPassword, userId) {
+  const updateUserQuery = `
+  UPDATE User 
+  SET password = ?
+  WHERE id = ?;`;
+  const [updateUserRow] = await connection.query(updateUserQuery, [hashedPassword, userId]);
+  return updateUserRow;
 }
 
 
@@ -553,6 +562,26 @@ async function insertSocialUserInfo(connection, insertUserInfoParams) {
   return insertUserInfoRow;
 }
 
+//사용자 id, 전화번호로 조회
+async function userPhoneNum(connection, editInfo, userId){
+  const userPhoneNumQuery=`
+      select id
+      from User
+      where phoneNum = ? and id = ?;`;
+  const [userPhoneRows] = await connection.query(userPhoneNumQuery, [editInfo, userId]);
+  return userPhoneRows;
+}
+
+//사용자 id, 비밀번호로 조회
+async function selectPassword(connection,idHashedPWParams){
+  const checkPasswordQuery=`
+      select id
+      from User
+      where password = ? and id = ?;`;
+  const [userPasswordRows] = await connection.query(checkPasswordQuery,idHashedPWParams);
+  return userPasswordRows;
+}
+
 module.exports = {
   selectUserReviews,
   selectMenuInfo,
@@ -564,7 +593,6 @@ module.exports = {
   insertUserInfo,
   selectUserPassword,
   selectUserAccount,
-  updateUserInfo,
   selectFavoritesList,
   updateFavoritesList,
   additFavoriteList,
@@ -580,4 +608,8 @@ module.exports = {
   patchUserCard,
   selectUserCardNum,
   insertSocialUserInfo,
+  updateUserPassWord,
+  updateUserPhoneNum,
+  userPhoneNum,
+  selectPassword,
 };

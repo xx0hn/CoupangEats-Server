@@ -13,21 +13,56 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-
-exports.editUser = async function (id, nickname) {
+//유저 정보 수정
+exports.editUserPassWord = async function (editInfo, userId) {
     try {
-        console.log(id)
-        const connection = await pool.getConnection(async (conn) => conn);
-        const editUserResult = await userDao.updateUserInfo(connection, id, nickname)
-        connection.release();
+        console.log(userId)
+        const hashedPassword = await crypto
+        .createHash('sha512')
+        .update(editInfo)
+        .digest('hex');
+        const idHashedPWParams = [hashedPassword, userId];
+        const passwordRows = await userProvider.checkPassword(idHashedPWParams);
+        if(passwordRows.length>0){
+            return errResponse(baseResponse.REDUNDANT_BEFORE_PASSWORD);
+        }
+        else{
+            const connection = await pool.getConnection(async (conn) => conn);
+            const editUserResult = await userDao.updateUserPassWord(connection, hashedPassword, userId)
+            connection.release();
 
-        return response(baseResponse.SUCCESS);
-
+            return response(baseResponse.SUCCESS);
+       }
     } catch (err) {
         logger.error(`App - editUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.editUserPhoneNum = async function(editInfo, userId){
+    try{
+        console.log(userId);
+        const checkPhoneNum = await userProvider.checkPhoneNum(editInfo, userId);
+        const checkPhone = await userProvider.phoneNumCheck(editInfo);
+        if(checkPhoneNum.length>0){
+            return response(baseResponse.REDUNDANT_BEFORE_PHONE_NUM);
+        }
+        else if(checkPhone.length>0){
+            return response(baseResponse.REDUNDANT_PHONE_NUM);
+        }
+        else{
+            const connection = await pool.getConnection(async (conn) => conn);
+            const editUserResult = await userDao.updateUserPhoneNum(connection, editInfo, userId)
+            connection.release();
+
+            return response(baseResponse.SUCCESS);
+        }
+    } catch (err) {
+            logger.error(`App - editUser Service error\n: ${err.message}`);
+            return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
 
 //즐겨찾기 추가
 exports.addFavoriteList = async function (userId, restaurantId) {

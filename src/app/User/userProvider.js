@@ -180,3 +180,20 @@ exports.cardNumCheck = async function(userId, bankId, cardNum){
   return userCardNum;
 }
 
+//전화번호, 사용자 id로 사용자 조회
+exports.checkPhoneNum = async function(editInfo,userId){
+  const connection = await pool.getConnection(async(conn)=>conn);
+  const userPhoneNum = await userDao.userPhoneNum(connection, editInfo, userId);
+  connection.release();
+  return userPhoneNum;
+}
+
+//비밀번호 확인
+exports.checkPassword = async function (idHashedPWParams) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const passwordCheckResult = await userDao.selectPassword(
+      connection, idHashedPWParams
+  );
+  connection.release();
+  return passwordCheckResult;
+};
