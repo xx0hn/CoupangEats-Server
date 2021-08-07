@@ -16,51 +16,6 @@ const baseResponseStatus = require('../../../config/baseResponseStatus');
 
 
 
-// TODO: After 로그인 인증 방법 (JWT)
-
-
-/**
- * API No. 31
- * API Name : 회원 정보 수정 API + JWT + Validation
- * [PATCH] /app/users/:userId
- * path variable : userId
- */
-exports.patchUsers = async function (req, res) {
-
-    // jwt - userId, path variable :userId
-
-    const userIdFromJWT = req.verifiedToken.userId
-    const userId = req.params.userId;
-    const {infoType} = req.query;
-    const {editInfo} = req.body;
-
-    if (userIdFromJWT != userId) {
-        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    } else {
-        if(!infoType) return res.send(errResponse(baseResponse.EDIT_INFO_TYPE_EMPTY));
-        if(infoType!=='PASSWORD'&&infoType!=='PHONENUM') return res.send(errResponse(baseResponse.EDIT_INFO_TYPE_ERROR));
-        if(infoType === `PASSWORD`){
-            if(!editInfo) return response(baseResponse.EDIT_PASSWORD_EMPTY);
-            const editUserInfo = await userService.editUserPassWord(editInfo, userId);
-            return res.send(response(editUserInfo));
-        }
-        else if(infoType==='PHONENUM'){
-            if(!editInfo) return response(baseResponse.EDIT_PHONE_NUM_EMPTY);
-            const editUserInfo = await userService.editUserPhoneNum(editInfo, userId);
-            return res.send(response(editUserInfo));
-        }
-    }
-};
-
-/** JWT 토큰 검증 API
- * [GET] /app/auto-signin
- */
-exports.check = async function (req, res) {
-    const userIdResult = req.verifiedToken.userId;
-    console.log(userIdResult);
-    return res.send(response(baseResponse.TOKEN_VERIFICATION_SUCCESS));
-};
-
 /**
  * API No. 2
  * API Name : 유저가 작성한 리뷰 조회 API
@@ -319,7 +274,7 @@ exports.patchCard = async function (req, res){
 
 /** API No.28
  * API Name : 자동 로그인 (JWT 토큰 검증 API)
- * [GET] /app/auto-signin
+ * [GET] /app/auto-login
  */
 exports.check = async function (req, res) {
     const userIdResult = req.verifiedToken.userId;
@@ -327,7 +282,7 @@ exports.check = async function (req, res) {
     return res.send(response(baseResponse.TOKEN_VERIFICATION_SUCCESS));
 };
 
-/** API No.28
+/** API No.29
  * API Name : 카카오 로그인
  * [POST] /app/login/kakao
  */
@@ -384,6 +339,42 @@ exports.loginKakao = async function (req, res) {
     } catch (err) {
         logger.error(`App - logInKakao Query error\n: ${JSON.stringify(err)}`);
         return res.send(errResponse(baseResponse.USER_INFO_EMPTY));
+    }
+};
+
+// TODO: After 로그인 인증 방법 (JWT)
+
+
+/**
+ * API No. 31
+ * API Name : 회원 정보 수정 API + JWT + Validation
+ * [PATCH] /app/users/:userId
+ * path variable : userId
+ */
+exports.patchUsers = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const {infoType} = req.query;
+    const {editInfo} = req.body;
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if(!infoType) return res.send(errResponse(baseResponse.EDIT_INFO_TYPE_EMPTY));
+        if(infoType!=='PASSWORD'&&infoType!=='PHONENUM') return res.send(errResponse(baseResponse.EDIT_INFO_TYPE_ERROR));
+        if(infoType === `PASSWORD`){
+            if(!editInfo) return response(baseResponse.EDIT_PASSWORD_EMPTY);
+            const editUserInfo = await userService.editUserPassWord(editInfo, userId);
+            return res.send(response(editUserInfo));
+        }
+        else if(infoType==='PHONENUM'){
+            if(!editInfo) return response(baseResponse.EDIT_PHONE_NUM_EMPTY);
+            const editUserInfo = await userService.editUserPhoneNum(editInfo, userId);
+            return res.send(response(editUserInfo));
+        }
     }
 };
 

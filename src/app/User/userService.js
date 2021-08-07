@@ -145,7 +145,7 @@ exports.postUserSignIn = async function (email, password) {
         const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
         if(passwordRows.length<1){
             return errResponse((baseResponse.SIGNIN_PASSWORD_WRONG));
-        }
+        } 
         // 계정 상태 확인
         const userInfoRows = await userProvider.accountCheck(email);
         if (userInfoRows[0].status === 'INACTIVE') {
