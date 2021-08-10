@@ -87,6 +87,11 @@ module.exports = function(app) {
     //#32 회원 탈퇴 API
     app.patch('/app/users/:userId/withdrawal', jwtMiddleware, user.patchUserStatus);
 
+    //#34 주문 API
+    app.post('/app/users/:userId/orders', jwtMiddleware, user.makeOrders);
+
+    //#35 푸시 알림 API
+    app.get('/app/push', user.pushAlarms);
 };
 
 

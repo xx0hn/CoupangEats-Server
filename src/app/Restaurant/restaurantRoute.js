@@ -39,4 +39,7 @@ module.exports = function(app) {
     //#30 매장 정보 조회 API
     app.get('/app/restaurants/:restaurantId/info', restaurant.getRestaurantInfo);
 
+    //#33 30초마다 차티배달 매장 수 알리는 스케줄러 API(콘솔로만 출력)
+    app.get('/app/restaurants/amount-cheetah', restaurant.getAmountCheetah);
+
 };

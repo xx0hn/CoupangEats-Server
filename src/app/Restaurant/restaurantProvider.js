@@ -1,5 +1,6 @@
 const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
+const schedule = require('node-schedule');
 
 const restaurantDao = require("./restaurantDao");
 
@@ -167,6 +168,7 @@ exports.helpedStatusCheck = async function(userId, reviewId){
 exports.availablePeriodCheck = async function(userId, reviewId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const PeriodCheck = await restaurantDao.selectReviewByPeriod(connection, userId, reviewId);
+    connection.release();
     return PeriodCheck;
 }
 
@@ -181,6 +183,7 @@ exports.userCheck = async function(userId, reviewId){
 exports.notHelpedCheck = async function(userId, reviewId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const notHelpedCheck = await restaurantDao.selectNotHelpedStatus(connection, userId, reviewId);
+    connection.release();
     return notHelpedCheck;
 }
 
@@ -188,5 +191,15 @@ exports.notHelpedCheck = async function(userId, reviewId){
 exports.getRestaurantInfo = async function(restaurantId){
     const connection = await pool.getConnection(async(conn)=>conn);
     const getRestaurantInfo = await restaurantDao.selectRestaurantInfo(connection, restaurantId);
+    connection.release();
     return getRestaurantInfo;
+}
+
+//치타배달 수 스케줄러
+exports.getAmountCheetah = async function(){
+    const connection = await pool.getConnection(async(conn)=>conn);
+    const getAmountCheetah = await restaurantDao.selectAmountCheetah(connection);
+    connection.release();
+    return getAmountCheetah;
+
 }

@@ -3,6 +3,8 @@ const restaurantProvider = require("../../app/Restaurant/restaurantProvider");
 const restaurantService = require("../../app/Restaurant/restaurantService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse} = require("../../../config/response");
+const schedule = require('node-schedule');
+const {logger} = require("../../../config/winston");
 
 const regexEmail = require('regex-email');
 const { emit } = require('nodemon');
@@ -277,4 +279,16 @@ exports.getRestaurantInfo = async function(req, res){
     if(!restaurantId) return res.response(baseResponse.RESTAURANT_ID_EMPTY);
     const getRestaurantInfo = await restaurantProvider.getRestaurantInfo(restaurantId);
     return res.send(response(baseResponse.SUCCESS, getRestaurantInfo));
+}
+
+/**
+ * API No. 33
+ * API Name : 30초마다 치타배달 가능 매장 수 조회 스케줄러 API
+ *[GET] /app/restaurants/amount-cheetah
+ */
+exports.getAmountCheetah = async function (req, res){
+    schedule.scheduleJob('*/5 * * * * *', async function () {
+        const getAmountCheetah = await restaurantProvider.getAmountCheetah();
+        console.log("5초 경과 ", getAmountCheetah);
+    });
 }

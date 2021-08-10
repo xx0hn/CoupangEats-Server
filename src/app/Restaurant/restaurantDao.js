@@ -614,6 +614,15 @@ where a.id = ?;`;
     return restaurantInfoRows;
 }
 
+//치타 배달 매장 수 조회
+async function selectAmountCheetah(connection){
+    const selectAmountCheetahQuery =`
+    select count(case when cheetaDel ='CHEETAH' then 1 end ) as AmountCheetahDelivery
+    from Restaurant;`;
+    const [amountCheetahRows] = await connection.query(selectAmountCheetahQuery);
+    return amountCheetahRows;
+}
+
 module.exports = {
     sortNewRestaurant,
     sortStarGradeRestaurant,
@@ -647,4 +656,5 @@ module.exports = {
     addNotHelped,
     cancelNotHelped,
     selectRestaurantInfo,
+    selectAmountCheetah,
 };

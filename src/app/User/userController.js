@@ -10,6 +10,7 @@ const secret_config = require('../../../config/secret');
 const jwt = require('jsonwebtoken');
 const { logger } = require('../../../config/winston');
 const baseResponseStatus = require('../../../config/baseResponseStatus');
+const admin = require('firebase-admin');
 // const pwdRegExp = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/; // 비밀번호 정규표현식, 6~20 자 이내 숫자 + 영문
 // const nicknameRegExp = /^.*(?=.{2,15})(?=.*[0-9])(?=.*[a-zA-Z]).*$/; // 2~15 자 이내 숫자 + 영문
 
@@ -394,4 +395,53 @@ exports.patchUserStatus = async function(req, res){
     if(!password) return res.send(response(baseResponse.SIGNIN_PASSWORD_EMPTY));
     const patchUserStatus = await userService.patchUserStatus(userId, password);
     return res.send(response(patchUserStatus));
+}
+
+/**
+ * API No. 34
+ * API Name : 주문 API
+ * [POST] /app/users/{userId}/orders
+ */
+exports.makeOrders = async function (req, res){
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    const ordersInfo = req.body;
+    if(!userId) return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(userIdFromJWT!=userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    }
+    if(!ordersInfo) return res.send(response(baseResponse.ORDERS_INFO_EMPTY));
+    for(let i=0; i<ordersInfo.length; i++) {
+        const makeOrders = await userService.makeOrders(userId, ordersInfo[i].restaurantId, ordersInfo[i].menuId, ordersInfo[i].menuCount);
+    }
+    return res.send(response(baseResponse.SUCCESS));
+}
+
+/**
+ * API No. 35
+ * API Name : 푸시 알림 API
+ * [GET] /app/pushAlarms
+ */
+exports.pushAlarms = async function(req, res){
+    let deviceToken=`token값 입력`
+
+    let message = {
+        notification:{
+            title: 'PushAlarms Test',
+            body:'Check your CoupangEats',
+        },
+        token:deviceToken,
+    }
+
+    admin
+        .messaging()
+        .send(message)
+        .then(function(response){
+            console.log('Successfully sent message:', response)
+            return res.status(200).json({success: true})
+        })
+        .catch(function(err) {
+            console.log('Error Sending message!!! : ', err)
+            return res.status(400).json({success: false})
+        });
 }

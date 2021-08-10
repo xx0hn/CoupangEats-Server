@@ -145,7 +145,7 @@ exports.postUserSignIn = async function (email, password) {
         const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
         if(passwordRows.length<1){
             return errResponse((baseResponse.SIGNIN_PASSWORD_WRONG));
-        } 
+        }
         // 계정 상태 확인
         const userInfoRows = await userProvider.accountCheck(email);
         if (userInfoRows[0].status === 'INACTIVE') {
@@ -256,6 +256,20 @@ exports.patchUserStatus = async function (userId, password){
         return response(baseResponse.SUCCESS);
     } catch(err){
         logger.error(`App - withdrawal Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//주문하기
+exports.makeOrders = async function (userId, restaurantId, menuId, menuCount){
+    try{
+        const connection = await pool.getConnection(async(conn)=>conn);
+        const makeOrders = await userDao.postOrders(connection, userId, restaurantId, menuId, menuCount);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+    } catch(err){
+        logger.error(`App - postOrders Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }

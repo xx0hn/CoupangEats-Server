@@ -90,6 +90,7 @@ module.exports = {
     EDIT_PASSWORD_EMPTY: {"isSuccess": false, "code": 2055, "message": "변경할 비밀번호를 입력해주세요. "},
     EDIT_PHONE_NUM_EMPTY: {"isSuccess": false, "code": 2056, "message": "변경할 전화번호를 입력해주세요. "},
 
+    ORDERS_INFO_EMPTY: {"isSuccess": false, "code": 2057, "message": "주문 정보를 입력해주세요. "},
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

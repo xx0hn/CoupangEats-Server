@@ -592,6 +592,15 @@ async function patchUserStatus(connection, userId){
   return patchUserStatusRows;
 }
 
+//주문
+async function postOrders(connection, userId, restaurantId, menuId, menuCount){
+  const postOrdersQuery=`
+  insert into Orders(userId, restaurantId, menuId, menuCount)
+  values(?, ?, ?, ?);`;
+  const [postOrdersRows] = await connection.query(postOrdersQuery, [userId, restaurantId, menuId, menuCount]);
+  return postOrdersRows;
+}
+
 module.exports = {
   selectUserReviews,
   selectMenuInfo,
@@ -623,4 +632,5 @@ module.exports = {
   userPhoneNum,
   selectPassword,
   patchUserStatus,
+  postOrders,
 };
