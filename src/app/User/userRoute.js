@@ -91,7 +91,7 @@ module.exports = function(app) {
     app.post('/app/users/:userId/orders', jwtMiddleware, user.makeOrders);
 
     //#35 푸시 알림 API
-    app.get('/app/push', user.pushAlarms);
+    // app.get('/app/push', user.pushAlarms);
 };
 
 

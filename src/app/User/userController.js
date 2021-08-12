@@ -10,7 +10,7 @@ const secret_config = require('../../../config/secret');
 const jwt = require('jsonwebtoken');
 const { logger } = require('../../../config/winston');
 const baseResponseStatus = require('../../../config/baseResponseStatus');
-const admin = require('firebase-admin');
+// const admin = require('firebase-admin');
 // const pwdRegExp = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/; // 비밀번호 정규표현식, 6~20 자 이내 숫자 + 영문
 // const nicknameRegExp = /^.*(?=.{2,15})(?=.*[0-9])(?=.*[a-zA-Z]).*$/; // 2~15 자 이내 숫자 + 영문
 
@@ -422,26 +422,26 @@ exports.makeOrders = async function (req, res){
  * API Name : 푸시 알림 API
  * [GET] /app/pushAlarms
  */
-exports.pushAlarms = async function(req, res){
-    let deviceToken=`token값 입력`
-
-    let message = {
-        notification:{
-            title: 'PushAlarms Test',
-            body:'Check your CoupangEats',
-        },
-        token:deviceToken,
-    }
-
-    admin
-        .messaging()
-        .send(message)
-        .then(function(response){
-            console.log('Successfully sent message:', response)
-            return res.status(200).json({success: true})
-        })
-        .catch(function(err) {
-            console.log('Error Sending message!!! : ', err)
-            return res.status(400).json({success: false})
-        });
-}
+// exports.pushAlarms = async function(req, res){
+//     let deviceToken=`token값 입력`
+//
+//     let message = {
+//         notification:{
+//             title: 'PushAlarms Test',
+//             body:'Check your CoupangEats',
+//         },
+//         token:deviceToken,
+//     }
+//
+//     admin
+//         .messaging()
+//         .send(message)
+//         .then(function(response){
+//             console.log('Successfully sent message:', response)
+//             return res.status(200).json({success: true})
+//         })
+//         .catch(function(err) {
+//             console.log('Error Sending message!!! : ', err)
+//             return res.status(400).json({success: false})
+//         });
+// }

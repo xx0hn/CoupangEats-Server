@@ -4,7 +4,6 @@ const restaurantService = require("../../app/Restaurant/restaurantService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse} = require("../../../config/response");
 const schedule = require('node-schedule');
-const {logger} = require("../../../config/winston");
 
 const regexEmail = require('regex-email');
 const { emit } = require('nodemon');
@@ -287,7 +286,7 @@ exports.getRestaurantInfo = async function(req, res){
  *[GET] /app/restaurants/amount-cheetah
  */
 exports.getAmountCheetah = async function (req, res){
-    schedule.scheduleJob('*/5 * * * * *', async function () {
+    schedule.scheduleJob('*/5 * * * * *', async function(){
         const getAmountCheetah = await restaurantProvider.getAmountCheetah();
         console.log("5초 경과 ", getAmountCheetah);
     });
