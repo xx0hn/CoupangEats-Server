@@ -71,6 +71,7 @@ async function homeAddressNot (connection, userId, setStatus){
     return notHomeAddressRows;
 }
 
+
 module.exports = {
     selectAddress,
     rmAddressInfo,

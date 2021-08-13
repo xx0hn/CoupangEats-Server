@@ -2,6 +2,7 @@ module.exports = function(app) {
     const restaurant = require('./restaurantController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
+
     //#3 매장 우선순위 정렬 조회 API
     app.get('/app/restaurants', restaurant.sortRestaurant);
 

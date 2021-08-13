@@ -1,7 +1,6 @@
 const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
 const schedule = require('node-schedule');
-
 const restaurantDao = require("./restaurantDao");
 
 //신규 순 매장 조회

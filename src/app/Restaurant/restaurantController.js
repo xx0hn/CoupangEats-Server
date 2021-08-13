@@ -4,7 +4,6 @@ const restaurantService = require("../../app/Restaurant/restaurantService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse} = require("../../../config/response");
 const schedule = require('node-schedule');
-
 const regexEmail = require('regex-email');
 const { emit } = require('nodemon');
 

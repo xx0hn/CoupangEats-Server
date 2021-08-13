@@ -5,6 +5,7 @@ module.exports = function(app) {
     const session = require('express-session');
     const KakaoStrategy = require('passport-kakao').Strategy;
 
+
     app.use(session({secret: 'SECRET_CODE', resave: true, saveUninitialized: false}));
     app.use(passport.initialize());
     app.use(passport.session());

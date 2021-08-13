@@ -623,6 +623,7 @@ async function selectAmountCheetah(connection){
     return amountCheetahRows;
 }
 
+
 module.exports = {
     sortNewRestaurant,
     sortStarGradeRestaurant,

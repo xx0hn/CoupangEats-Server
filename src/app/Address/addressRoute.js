@@ -3,6 +3,7 @@ module.exports = function(app) {
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
 
+
     //#1 유저의 배달지 목록 조회 API (jwt 적용 완료!)
     app.get('/app/users/:userId/addresses',jwtMiddleware, address.getAddress);
 
