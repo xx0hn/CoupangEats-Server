@@ -2,11 +2,11 @@
 CoupangEats Clone Coding Project
 
 
-1	  GET	/app/users/:userId/addresses	유저 배송지 조회 API
-2	  GET	/app/users/:userId/reviews	유저 작성한 리뷰 조회 API
-3	  GET	/app/restaurants	우선 순위 순 매장 조회 API
-4	  PATCH	/app/users/:userId/helped-review	리뷰 도움 여부 취소 API
-5	  PATCH	/app/users/:userId/addresses	배송지 삭제 API
+1.  GET	/app/users/:userId/addresses	유저 배송지 조회 API
+2.  GET	/app/users/:userId/reviews	유저 작성한 리뷰 조회 API
+3.  GET	/app/restaurants	우선 순위 순 매장 조회 API
+4.  PATCH	/app/users/:userId/helped-review	리뷰 도움 여부 취소 API
+5.  PATCH	/app/users/:userId/addresses	배송지 삭제 API
 6	  POST	/app/users/:userId/addresses	배송지 추가 API
 7	  PATCH	/app/users/:userId/default-address	기본 배송지 설정 API
 8	  GET	/app/users/:userId/favorites	즐겨찾기 조회 API
