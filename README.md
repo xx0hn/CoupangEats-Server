@@ -1,7 +1,7 @@
 # CoupangEats-Server
 CoupangEats Clone Coding Project
 
-
+<p>(
 1.  GET	/app/users/:userId/addresses	유저 배송지 조회 API
 2.  GET	/app/users/:userId/reviews	유저 작성한 리뷰 조회 API
 3.  GET	/app/restaurants	우선 순위 순 매장 조회 API
@@ -37,3 +37,4 @@ CoupangEats Clone Coding Project
 33.	GET	/app/restaurants/amount-cheetah	5초마다 치타배달 가능 매장 수  조회 스케줄러 API
 34.	POST	/app/users/:userId/orders	주문 API
 35.	GET	/app/push	푸시 알람 API (app token 없어 실행 안됨)
+)</p>
