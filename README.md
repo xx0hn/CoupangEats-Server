@@ -1,5 +1,7 @@
-# CoupangEats-Server
+# CoupangEats-Clone-Server
+
 ### CoupangEats Clone Coding Project
+#### By xx0hn
 
 1.  GET	/app/users/:userId/addresses	유저 배송지 조회 API
 2.  GET	/app/users/:userId/reviews	유저 작성한 리뷰 조회 API
